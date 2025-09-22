@@ -1,0 +1,38 @@
+{
+  "name": "@repo/react-components",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./ui": "./dist/ui/index.mjs",
+    "./lib": "./dist/lib/index.mjs",
+    "./style.css": "./dist/style.css"
+  },
+  "scripts": {
+    "dev": "concurrently \"npx @tailwindcss/cli -i ./src/style.css -o dist/style.css --watch\" \"tsup --watch\"",
+    "build": "npx @tailwindcss/cli -i ./src/style.css -o dist/style.css && tsup",
+    "lint": "echo 'Add lint script here'",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.544.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwind-merge": "^3.3.1",
+    "tw-animate-css": "^1.3.8"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/node": "^22.15.3",
+    "@types/react": "19.1.0",
+    "@types/react-dom": "19.1.1",
+    "concurrently": "^9.2.1",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.13",
+    "tsup": "^8.5.0"
+  }
+}
