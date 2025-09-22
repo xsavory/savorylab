@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { ThemeProvider } from '@repo/react-components/context'
 import '@repo/react-components/style.css'
 import './index.css'
 
@@ -19,6 +20,8 @@ declare module '@tanstack/react-router' {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider defaultTheme="system" storageKey="savorylab-ui-theme">
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>,
 )
