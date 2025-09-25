@@ -1,7 +1,8 @@
 import { Button } from '@repo/react-components/ui'
-import logo from '@/assets/logo.png'
 
-export function LandingBanner() {
+import logo from 'src/assets/logo.png'
+
+function LandingBanner() {
   return (
     <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -21,3 +22,5 @@ export function LandingBanner() {
     </section>
   )
 }
+
+export default LandingBanner

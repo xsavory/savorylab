@@ -1,7 +1,12 @@
-import { createRootRoute, Outlet } from '@tanstack/react-router'
-import { Navbar } from '@/components/navbar'
+import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 
-export const Route = createRootRoute({
+import Navbar from 'src/components/navbar'
+
+interface MyRouterContext {
+  sample: string
+}
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
     <div className="min-h-screen bg-background">
       <Navbar />

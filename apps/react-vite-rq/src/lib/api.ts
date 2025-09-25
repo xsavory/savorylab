@@ -46,6 +46,12 @@ const mockUsers: User[] = [
   }
 ]
 
+// React Query keys
+export const queryKeys = {
+  users: ['users'] as const,
+  user: (id: string) => ['users', id] as const,
+}
+
 // Simulated API delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -102,10 +108,4 @@ export const api = {
     mockUsers.splice(userIndex, 1)
     return true
   }
-}
-
-// React Query keys
-export const queryKeys = {
-  users: ['users'] as const,
-  user: (id: string) => ['users', id] as const,
 }

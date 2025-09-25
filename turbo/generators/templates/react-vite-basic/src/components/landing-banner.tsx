@@ -1,5 +1,6 @@
 import { Button } from '@repo/react-components/ui'
-import logo from '@/assets/logo.png'
+
+import logo from 'src/assets/logo.png'
 
 export function LandingBanner() {
   return (

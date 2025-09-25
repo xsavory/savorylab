@@ -1,7 +1,7 @@
 import { Button } from '@repo/react-components/ui'
 import { useTheme } from '@repo/react-components/hooks'
 
-export function ThemeToggle() {
+function ThemeToggle() {
   const { theme, setTheme } = useTheme()
 
   const toggleTheme = () => {
@@ -54,3 +54,5 @@ export function ThemeToggle() {
     </Button>
   )
 }
+
+export default ThemeToggle

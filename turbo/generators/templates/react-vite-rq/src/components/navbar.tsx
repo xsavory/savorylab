@@ -1,10 +1,11 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@repo/react-components/ui'
-import useToggle from '@/hooks/use-toggle'
-import logo from '@/assets/logo.png'
-import { ThemeToggle } from './theme-toggle'
 
-export function Navbar() {
+import ThemeToggle from 'src/components/theme-toggle'
+import useToggle from 'src/hooks/use-toggle'
+import logo from 'src/assets/logo.png'
+
+function Navbar() {
   const [isMenuOpen, toggleMenu] = useToggle(false)
 
   return (
@@ -100,3 +101,5 @@ export function Navbar() {
     </nav>
   )
 }
+
+export default Navbar

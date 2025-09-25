@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { api, queryKeys, type User } from '../lib/api'
+
+import { api, queryKeys, type User } from 'src/lib/api'
 
 function ReactQueryPage() {
   const {
