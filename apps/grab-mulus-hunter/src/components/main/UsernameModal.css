@@ -1,0 +1,254 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: linear-gradient(145deg, #00B300, #00351F);
+  border: 6px solid #FFD600;
+  border-radius: 25px;
+  padding: 30px;
+  box-shadow:
+    0 0 0 2px #00351F,
+    0 0 0 8px #FFD600,
+    0 0 0 10px #00351F,
+    0 12px 24px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 214, 0, 0.2);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-content::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  bottom: 15px;
+  border: 2px solid rgba(255, 214, 0, 0.3);
+  border-radius: 15px;
+  pointer-events: none;
+}
+
+.close-button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background: linear-gradient(145deg, #ff4444, #cc2222);
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.close-button:hover {
+  background: linear-gradient(145deg, #cc2222, #ff4444);
+  transform: scale(1.1);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2),
+    0 0 15px rgba(255, 68, 68, 0.5);
+}
+
+.close-button:active {
+  transform: scale(0.95);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.modal-header h2 {
+  color: #FFD600;
+  font-family: 'GrabCommunityInline', 'GrabCommunity', Arial, sans-serif;
+  font-size: 2rem;
+  margin: 0 0 20px 0;
+  text-shadow:
+    0 0 20px rgba(255, 214, 0, 0.6),
+    2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.username-input {
+  padding: 12px 16px;
+  font-size: 1.2rem;
+  border: 3px solid #FFD600;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  color: #00351F;
+  font-family: 'GrabCommunity', Arial, sans-serif;
+  font-weight: bold;
+  text-align: center;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.username-input:focus {
+  outline: none;
+  border-color: #00AA03;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 2px 6px rgba(0, 0, 0, 0.2),
+    0 0 15px rgba(0, 170, 3, 0.4);
+  transform: translateY(-1px);
+}
+
+.username-input.error {
+  border-color: #ff4444;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 2px 6px rgba(0, 0, 0, 0.2),
+    0 0 15px rgba(255, 68, 68, 0.4);
+}
+
+.error-message {
+  color: #ff4444;
+  font-size: 0.9rem;
+  font-family: 'GrabCommunity', Arial, sans-serif;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.modal-content .play-button {
+  background: linear-gradient(145deg, #FFD600, #ffcc00);
+  color: #00351F;
+  border: 3px solid #00351F;
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  font-family: 'GrabCommunity', Arial, sans-serif;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.3),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content .play-button:hover {
+  background: linear-gradient(145deg, #ffcc00, #FFD600);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(255, 214, 0, 0.4);
+}
+
+.modal-content .play-button:active {
+  transform: translateY(0);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.3),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content .play-button:disabled {
+  background: linear-gradient(145deg, #888888, #666666);
+  color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.1),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content .play-button:disabled:hover {
+  background: linear-gradient(145deg, #888888, #666666);
+  transform: none;
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.1),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Enhanced error message styling */
+.error-message {
+  color: #ff4444;
+  font-size: 0.9rem;
+  font-family: 'GrabCommunity', Arial, sans-serif;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  background: rgba(255, 68, 68, 0.1);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 68, 68, 0.3);
+  margin-top: 8px;
+}
+
+/* Validating message styling */
+.validating-message {
+  color: #FFD600;
+  font-size: 0.9rem;
+  font-family: 'GrabCommunity', Arial, sans-serif;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  background: rgba(255, 214, 0, 0.1);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 214, 0, 0.3);
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 214, 0, 0.3);
+  border-left: 2px solid #FFD600;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

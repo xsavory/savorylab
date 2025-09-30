@@ -1,8 +1,12 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@custom-variant dark (&:where(.dark, .dark *));
-@source "../../../packages/react-components/src";
+body {
+  margin: 0;
+  font-family: 'GrabCommunity', Arial, sans-serif;
+  font-size: 2vmin;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-.app {
-  box-sizing: border-box;
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }

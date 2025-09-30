@@ -1,0 +1,205 @@
+.container {
+  background-color: #00351F;
+  height: 100%;
+  width: 100%;
+}
+
+.frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 100%;
+  height: 100%;
+}
+
+.pinjam-tenang-logo-game {
+  height: auto;
+  width: 70px;
+  position: absolute;
+  top: 40px;
+  left: 40px;
+}
+
+.game {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.board {
+  height: 80vh;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  padding-left: 2rem;
+}
+
+.sidebar .logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.game-panel {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.game-logo {
+  height: auto;
+  width: 400px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.grab-modal-logo-game-container {
+  display: flex;
+  justify-content: center;
+}
+
+.grab-modal-logo-game {
+  height: auto;
+  width: 300px;
+}
+
+.score-panel,
+.timer-panel {
+  background: linear-gradient(145deg, #00AA03, #00351F);
+  border: 4px solid #FFD600;
+  border-radius: 24px;
+  padding: 1rem;
+  min-width: 200px;
+  text-align: center;
+  box-shadow:
+    0 0 0 2px #00351F,
+    0 0 0 6px #FFD600,
+    0 0 0 8px #00351F,
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 214, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.score-panel::before,
+.timer-panel::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #FFD600, #00AA03, #FFD600, #00AA03);
+  border-radius: 26px;
+  z-index: -1;
+  animation: shimmer 3s infinite;
+}
+
+.score-panel::after,
+.timer-panel::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  height: 6px;
+  background: linear-gradient(90deg, #FFD600, #ffcc00, #FFD600);
+  border-radius: 20px 20px 0 0;
+  opacity: 0.8;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0.8;
+    background: linear-gradient(45deg, #FFD600, #00AA03, #FFD600, #00AA03);
+  }
+  25% {
+    opacity: 1;
+    background: linear-gradient(45deg, #00AA03, #FFD600, #00AA03, #FFD600);
+  }
+  50% {
+    opacity: 0.9;
+    background: linear-gradient(45deg, #FFD600, #00351F, #FFD600, #00351F);
+  }
+  75% {
+    opacity: 1;
+    background: linear-gradient(45deg, #00351F, #FFD600, #00351F, #FFD600);
+  }
+}
+
+.panel-header {
+  font-family: 'GrabCommunityInline', 'GrabCommunity', Arial, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #FFD600;
+  text-shadow: 0 0 10px rgba(255, 214, 0, 0.5);
+  margin-bottom: 0.5rem;
+  letter-spacing: 2px;
+}
+
+.score-value,
+.timer-value {
+  font-family: 'GrabCommunity', Arial, sans-serif;
+  font-size: 3rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow:
+    0 0 20px rgba(255, 255, 255, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1;
+  margin: 0;
+}
+
+/* Timer specific styling for urgency */
+.timer-panel.urgent {
+  border-color: #ff4444;
+  animation: pulse-urgent 1s infinite;
+}
+
+.timer-panel.urgent .timer-value {
+  color: #ff4444;
+  text-shadow:
+    0 0 20px rgba(255, 68, 68, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.timer-panel.urgent::before {
+  background: linear-gradient(45deg, #ff4444, #FFD600, #ff4444, #FFD600) !important;
+  animation: urgent-shimmer 0.5s infinite;
+}
+
+@keyframes pulse-urgent {
+  0%, 100% {
+    border-color: #ff4444;
+    box-shadow:
+      0 0 0 2px #00351F,
+      0 0 0 6px #ff4444,
+      0 0 0 8px #00351F,
+      0 8px 16px rgba(0, 0, 0, 0.4),
+      0 0 20px rgba(255, 68, 68, 0.4);
+  }
+  50% {
+    border-color: #FFD600;
+    box-shadow:
+      0 0 0 2px #00351F,
+      0 0 0 6px #FFD600,
+      0 0 0 8px #00351F,
+      0 8px 16px rgba(0, 0, 0, 0.4),
+      0 0 30px rgba(255, 68, 68, 0.6);
+  }
+}
+
+@keyframes urgent-shimmer {
+  0%, 100% {
+    background: linear-gradient(45deg, #ff4444, #FFD600, #ff4444, #FFD600);
+  }
+  50% {
+    background: linear-gradient(45deg, #FFD600, #ff4444, #FFD600, #ff4444);
+  }
+}

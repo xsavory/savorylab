@@ -1,0 +1,344 @@
+.container {
+  background-color: #00351F;
+  height: 100%;
+  width: 100%;
+}
+
+.frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 100%;
+  height: 100%;
+}
+
+.pinjam-tenang-logo {
+  height: auto;
+  width: 90px;
+  position: absolute;
+  top: 40px;
+  left: 40px;
+}
+
+.leaderboard {
+  font-size: 12pt;
+  background: transparent;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.main-layout {
+  display: flex;
+  gap: 4rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+
+.left-column {
+  z-index: 2;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.right-column {
+  z-index: 2;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-container {
+  z-index: 2;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.main-logo {
+  height: auto;
+  width: 400px;
+  max-width: 40vw;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.grab-modal-logo {
+  height: auto;
+  width: 250px;
+}
+
+.your-score {
+  color: #ffffff;
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.6),
+    1px 1px 2px rgba(0, 0, 0, 0.8);
+  font-family: 'GrabCommunity', Arial, sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+  text-align: center;
+}
+
+.score-highlight {
+  background: linear-gradient(145deg, #FFD600, #ffcc00);
+  color: #00351F;
+  padding: 0.3rem 0.8rem;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 2.5rem;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+  border: 2px solid #00351F;
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+  display: inline-block;
+  margin: 0 0.2rem;
+}
+
+.leaderboard h1 {
+  color: #FFD600;
+  text-shadow:
+    0 0 20px rgba(255, 214, 0, 0.6),
+    2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-family: 'GrabCommunityInline', 'GrabCommunity', Arial, sans-serif;
+  font-size: 2rem;
+  margin: 0;
+  margin-bottom: 0.5rem;
+  z-index: 2;
+  position: relative;
+}
+
+
+.wait-message,
+.error {
+  color: #FFD600;
+  padding: 80px;
+  padding-top: 224px;
+  padding-bottom: 224px;
+  text-shadow: 0 0 10px rgba(255, 214, 0, 0.6);
+  font-family: 'GrabCommunity', Arial, sans-serif;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.leaderboard-container {
+  z-index: 2;
+  position: relative;
+  margin-top: 1rem;
+}
+
+.scores-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: fit-content;
+}
+
+.score-card {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(145deg, #00AA03, #00351F);
+  border: 4px solid #FFD600;
+  border-radius: 20px;
+  padding: 8px 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  min-width: 350px;
+  box-shadow:
+    0 0 0 2px #00351F,
+    0 0 0 6px #FFD600,
+    0 0 0 8px #00351F,
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 214, 0, 0.2);
+}
+
+.score-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 0 0 2px #00351F,
+    0 0 0 6px #FFD600,
+    0 0 0 8px #00351F,
+    0 12px 20px rgba(0, 0, 0, 0.5),
+    inset 0 2px 4px rgba(255, 214, 0, 0.2),
+    0 0 30px rgba(255, 214, 0, 0.4);
+}
+
+.score-card.first-place {
+  background: linear-gradient(145deg, #FFD600, #ffcc00);
+  border: 4px solid #00AA03;
+  padding: 15px 20px;
+  min-width: 350px;
+  box-shadow:
+    0 0 0 2px #FFD600,
+    0 0 0 6px #00AA03,
+    0 0 0 8px #FFD600,
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(0, 170, 3, 0.2),
+    0 0 30px rgba(255, 214, 0, 0.5);
+}
+
+.score-card.first-place:hover {
+  box-shadow:
+    0 0 0 2px #FFD600,
+    0 0 0 6px #00AA03,
+    0 0 0 8px #FFD600,
+    0 12px 20px rgba(0, 0, 0, 0.5),
+    inset 0 2px 4px rgba(0, 170, 3, 0.2),
+    0 0 40px rgba(255, 214, 0, 0.6);
+}
+
+.player-avatar {
+  width: 70px;
+  height: 70px;
+  flex-shrink: 0;
+}
+
+.score-card.first-place .player-avatar {
+  width: 70px;
+  height: 70px;
+}
+
+.avatar-icon {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, #FFD600, #ffcc00);
+  border: 3px solid #00351F;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.avatar-icon::before {
+  content: '🟡';
+  font-size: 24px;
+  color: #00351F;
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.winner-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.6));
+}
+
+.score-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.rank-number {
+  font-family: 'GrabCommunity', Arial, sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #FFD600;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  min-width: 50px;
+}
+
+.score-card.first-place .rank-number {
+  color: #00351F;
+  text-shadow: 2px 2px 4px rgba(255, 214, 0, 0.8);
+}
+
+.player-name {
+  font-family: 'GrabCommunity', Arial, sans-serif;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #FFD600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  text-transform: uppercase;
+  margin-right: 12px;
+}
+
+.score-card.first-place .player-name {
+  color: #00351F;
+  text-shadow: 1px 1px 2px rgba(255, 214, 0, 0.8);
+}
+
+.score-box {
+  background: #ffffff;
+  color: #00351F;
+  font-family: 'GrabCommunity', Arial, sans-serif;
+  font-size: 1.4rem;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 3px solid #00351F;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+  min-width: 100px;
+  text-align: center;
+}
+
+.score-card.first-place .score-box {
+  background: linear-gradient(145deg, #00AA03, #00351F);
+  color: #FFD600;
+  border: 3px solid #FFD600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  box-shadow:
+    inset 0 2px 4px rgba(255, 214, 0, 0.2),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  z-index: 2;
+  position: relative;
+  width: 100%;
+}
+
+.home {
+  background: linear-gradient(145deg, #00B300, #00AA03);
+  color: #00351F;
+  border: 3px solid #00351F;
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  font-family: 'GrabCommunity', Arial, sans-serif;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.3),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+  width: 100%;
+}
+
+.home:hover {
+  background: linear-gradient(145deg, #ffcc00, #FFD600);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(255, 214, 0, 0.4);
+}
+
+.home:active {
+  transform: translateY(0);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.3),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+}

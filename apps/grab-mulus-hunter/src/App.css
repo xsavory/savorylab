@@ -1,0 +1,24 @@
+body {
+  background-image: url('/images/bg-green.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  box-sizing: border-box;
+}
+
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.content {
+  height: 95%;
+  width: 95%;
+  position: relative;
+  padding: 14px 17px;
+  box-sizing: border-box;
+}
