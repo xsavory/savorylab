@@ -20,4 +20,9 @@ export default defineConfig({
       'src': resolve(__dirname, './src'),
     },
   },
+  server: {
+    port: Number(process.env.PORT) || 3000,
+    strictPort: false,
+    open: false,
+  },
 })

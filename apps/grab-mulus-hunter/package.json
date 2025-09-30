@@ -1,5 +1,5 @@
 {
-  "name": "btn-private-registration",
+  "name": "grab-mulus-hunter",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,22 +13,19 @@
   "dependencies": {
     "@repo/react-components": "workspace:*",
     "@tailwindcss/vite": "^4.1.13",
-    "@tanstack/react-query": "^5.90.1",
-    "@tanstack/react-router": "^1.121.2",
-    "appwrite": "^20.0.0",
+    "@tanstack/react-router": "^1.77.3",
     "clsx": "^2.1.1",
     "lucide-react": "^0.447.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.13",
-    "tw-animate-css": "^1.3.8",
-    "zod": "^4.1.11"
+    "tw-animate-css": "^1.3.8"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@tanstack/router-plugin": "^1.121.2",
+    "@tanstack/router-plugin": "^1.77.3",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.3",

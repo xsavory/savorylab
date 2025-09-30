@@ -1,6 +1,7 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
+  "globalEnv": ["PORT"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -8,18 +9,18 @@
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^build"]
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": ["^build"]
     },
     "dev": {
+      "with": ["@repo/react-components#dev"],
       "cache": false,
       "persistent": true
     },
     "preview": {
       "cache": false,
-      "dependsOn": ["build"],
       "persistent": true
     }
   }

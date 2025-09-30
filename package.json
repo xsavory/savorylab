@@ -2,22 +2,12 @@
   "name": "savorylab",
   "private": true,
   "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "preview": "turbo run preview",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "build-package:react-components": "turbo run build --filter=@repo/react-components",
-    "dev:react-vite-basic": "turbo run dev --filter=react-vite-basic...",
-    "build:react-vite-basic": "turbo run build --filter=react-vite-basic...",
-    "preview:react-vite-basic": "turbo run preview --filter=react-vite-basic",
-    "dev:react-vite-rq": "turbo run dev --filter=react-vite-rq...",
-    "build:react-vite-rq": "turbo run build --filter=react-vite-rq...",
-    "preview:react-vite-rq": "turbo run preview --filter=react-vite-rq",
-    "dev:btn-private-registration": "turbo run dev --filter=btn-private-registration...",
-    "build:btn-private-registration": "turbo run build --filter=btn-private-registration...",
-    "preview:btn-private-registration": "turbo run preview --filter=btn-private-registration",
-    "dev:react-vite-appwrite": "turbo run dev --filter=react-vite-appwrite...",
-    "build:react-vite-appwrite": "turbo run build --filter=react-vite-appwrite...",
-    "preview:react-vite-appwrite": "turbo run preview --filter=react-vite-appwrite"
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
     "@turbo/gen": "^2.5.6",
