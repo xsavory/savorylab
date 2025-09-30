@@ -1,74 +1,51 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Button, Card, CardHeader, CardTitle, CardDescription, CardContent } from '@repo/react-components/ui'
 
-import { LandingBanner } from 'src/components/landing-banner'
+import Logo from "src/assets/logo.svg";
+import { RetroGrid } from "src/components/retro-grid";
 
 export const Route = createFileRoute('/')({
-  component: Index,
+  component: App,
 })
 
-function Index() {
+function App() {
   return (
-    <div>
-      <LandingBanner />
+    <div className="relative flex h-screen w-full flex-col items-center justify-center px-4 rounded-lg border bg-background text-center">
+      <div className="mb-24">
+        <img
+          src={Logo}
+          alt="Aftertaste Creative Logo"
+          className="w-72 h-auto mx-auto"
+        />
+      </div>
 
-      <section className="py-8 bg-card">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-foreground mb-3">
-              Base Tech Stack
-            </h2>
-          </div>
+      <span
+        className="relative z-10 bg-gradient-to-r from-[#71F79F] via-[#00F0FF] to-[#71F79F]
+                   bg-[length:200%_200%] bg-clip-text 
+                   text-6xl md:text-7xl lg:text-8xl 
+                   font-bold leading-tight tracking-tighter 
+                   text-transparent drop-shadow-[0_0_20px_rgba(0,240,255,0.4)]"
+        style={{
+          animation: "shimmer 6s ease-in-out infinite",
+        }}
+      >
+        Coming Soon
+      </span>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>⚡ Vite</CardTitle>
-                <CardDescription>
-                  Fast build tool with HMR
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Lightning fast development server
-                </p>
-              </CardContent>
-            </Card>
+      <p className="max-w-md sm:max-w-xl md:max-w-2xl mx-auto 
+                    text-sm sm:text-base md:text-lg text-muted-foreground">
+        Stay tuned for updates and exciting experiences ahead.
+      </p>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>🎨 Tailwind CSS</CardTitle>
-                <CardDescription>
-                  Utility-first CSS framework
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Rapid UI development
-                </p>
-              </CardContent>
-            </Card>
+      <RetroGrid />
 
-            <Card>
-              <CardHeader>
-                <CardTitle>🛣️ TanStack Router</CardTitle>
-                <CardDescription>
-                  Type-safe routing
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Modern React routing solution
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="text-center mt-8">
-            <Button>Start Building</Button>
-          </div>
-        </div>
-      </section>
+      {/* Animasi shimmer */}
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
     </div>
-  )
+  );
 }
