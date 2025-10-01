@@ -10,27 +10,20 @@ export type AppwriteListResponse<T> = {
 };
 
 export interface Participant {
-  id: string
+  $id: string
   name: string
   email?: string
   phone?: string
   isCheckedIn: boolean
-  createdAt: Date
-  updatedAt: Date
+  checkedInAt: string
+  $createdAt: Date
+  $updatedAt: Date
 }
 
 export interface Attendance {
-  id: string
+  $id: string
   participantId: string
-  checkedInAt: Date
-  createdAt: Date
-  updatedAt: Date
-}
-
-export interface Admins {
-  id: string
-  name: string
-  email: string
-  createdAt: Date
-  updatedAt: Date
+  participant: Participant
+  $createdAt: Date
+  $updatedAt: Date
 }

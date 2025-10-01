@@ -3,3 +3,8 @@ export * from "./card";
 export * from "./input";
 export * from "./dropdown-menu";
 export * from "./form";
+export * from "./dialog";
+export * from "./badge";
+export * from "./popover";
+export * from "./pagination";
+export * from "./select";
