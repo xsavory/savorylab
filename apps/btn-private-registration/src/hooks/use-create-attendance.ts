@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { attendance } from "src/lib/api";
+import type { AppwriteDocument, Attendance } from "src/types/schema";
 
 interface UseCreateAttendanceResponse {
   createAttendance: (participantId: string) => void;
@@ -7,6 +8,7 @@ interface UseCreateAttendanceResponse {
   isError: boolean;
   error: Error | null;
   isSuccess: boolean;
+  data: AppwriteDocument<Attendance> | undefined;
 }
 
 const useCreateAttendance = (): UseCreateAttendanceResponse => {
@@ -16,12 +18,15 @@ const useCreateAttendance = (): UseCreateAttendanceResponse => {
     isError,
     error,
     isSuccess,
+    data,
   } = useMutation({
-    mutationFn: async (participantId: string) => {
+    mutationFn: async (participantId: string): Promise<AppwriteDocument<Attendance>> => {
       const response = await attendance.create(participantId);
-      if (response.error) {
-        throw new Error(response.error);
+
+      if (response.error || !response.data) {
+        throw new Error(response.error || "Check-in gagal");
       }
+
       return response.data;
     },
   });
@@ -32,6 +37,7 @@ const useCreateAttendance = (): UseCreateAttendanceResponse => {
     isError,
     error: error as Error | null,
     isSuccess,
+    data,
   };
 };
 

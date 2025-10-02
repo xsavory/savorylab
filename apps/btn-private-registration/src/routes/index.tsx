@@ -54,20 +54,22 @@ function App() {
         <div className="text-center max-w-4xl">
           
           {/* Headline image */}
-          <div className="mb-8 flex justify-center">
-            <img 
-              src={logoImg} 
-              alt="Grand Launching BTN Private - Elevate Your Legacy" 
+          <div className="mb-12 flex justify-center">
+            <img
+              src={logoImg}
+              alt="Grand Launching BTN Private - Elevate Your Legacy"
               className="max-w-full max-h-48 object-contain drop-shadow-2xl filter brightness-110"
             />
           </div>
 
-          {/* Status badge */}
-          <div className="mb-12">
-            <span className="inline-block bg-gradient-to-r from-amber-500/20 to-amber-600/30 text-amber-200 font-bold px-6 py-3 rounded-full shadow-xl border border-amber-400/40 backdrop-blur-sm">
-              <span className="mr-2">✨</span>
+          {/* Subtitle text */}
+          <div className="mb-8">
+            <p className="text-gray-300 text-xl font-medium">
               Grand Launching Event System
-            </span>
+            </p>
+            <p className="text-gray-500 text-sm mt-2">
+              Event registration and management platform
+            </p>
           </div>
           
           {/* CTA Button */}

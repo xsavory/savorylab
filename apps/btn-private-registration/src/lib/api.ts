@@ -290,25 +290,29 @@ export const attendance = {
         databaseId: DATABASE_ID,
         tableId: PARTICIPANTS_TABLE_ID,
         rowId: participantId,
-        data: { 
+        data: {
           isCheckedIn: true,
           checkedInAt: new Date().toISOString(),
         }
       });
 
-      // Create attendance record
+      // Create attendance record with relationship
       const attendanceResponse = await databases.createRow({
         databaseId: DATABASE_ID,
         tableId: ATTENDANCE_TABLE_ID,
         rowId: ID.unique(),
         data: {
-          participantId: participantId,
-          checkedInAt: new Date().toISOString(),
+          participant: participantId,  // relationship column
         }
       });
 
+      const attendanceWithParticipant = {
+        ...attendanceResponse,
+        ...participant
+      } as unknown as AppwriteDocument<Attendance>;
+
       return formatApiResponse<AppwriteDocument<Attendance>>(
-        attendanceResponse as unknown as AppwriteDocument<Attendance>,
+        attendanceWithParticipant,
         null
       );
     } catch (error) {

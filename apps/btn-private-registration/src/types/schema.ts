@@ -22,7 +22,6 @@ export interface Participant {
 
 export interface Attendance {
   $id: string
-  participantId: string
   participant: Participant
   $createdAt: Date
   $updatedAt: Date
