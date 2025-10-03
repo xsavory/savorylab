@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Download, Loader2 } from "lucide-react";
 import { Button } from "@repo/react-components/ui";
+import { downloadCSV } from '@repo/react-components/lib';
+
 import { participants } from "src/lib/api";
 import type { Participant } from "src/types/schema";
 
@@ -25,38 +27,16 @@ function AdminExportData() {
             minute: '2-digit',
           })
         : "-";
-      const createdAt = new Date(participant.$createdAt).toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
 
       return [
         index + 1,
         `"${participant.name}"`,
         `"${status}"`,
         `"${checkedInAt}"`,
-        `"${createdAt}"`,
       ].join(",");
     });
 
     return [headers.join(","), ...rows].join("\n");
-  };
-
-  const downloadCSV = (csvContent: string, filename: string) => {
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-
-    link.setAttribute("href", url);
-    link.setAttribute("download", filename);
-    link.style.visibility = "hidden";
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
   const handleExportCSV = async () => {
