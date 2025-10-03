@@ -63,7 +63,7 @@ function App() {
           </div>
 
           {/* Subtitle text */}
-          <div className="mb-8">
+          <div className="mb-12">
             <p className="text-gray-300 text-xl font-medium">
               Grand Launching Event System
             </p>
@@ -71,29 +71,56 @@ function App() {
               Event registration and management platform
             </p>
           </div>
-          
-          {/* CTA Button */}
-          <Button 
-            onClick={handleCTAClick}
-            size="lg"
-            className="text-lg px-12 py-6 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-black font-bold shadow-2xl shadow-amber-500/40 transform hover:scale-105 transition-all duration-300 border-0 rounded-full ring-2 ring-amber-400/30 hover:ring-amber-400/50"
-          >
-            {isAuthenticated ? (
-              <>
-                <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2V7a2 2 0 012-2h2a2 2 0 002 2v2a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 00-2 2h-2a2 2 0 00-2 2v6a2 2 0 01-2 2H9z" />
-                </svg>
-                Buka Dashboard
-              </>
-            ) : (
-              <>
-                <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                </svg>
-                Masuk ke Admin
-              </>
-            )}
-          </Button>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-3xl mx-auto">
+            {/* Admin CTA */}
+            <Button
+              onClick={handleCTAClick}
+              size="lg"
+              className="w-full sm:w-auto inline-flex items-center gap-2 text-base px-10 py-6 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-black font-bold shadow-2xl shadow-amber-500/40 transform hover:scale-105 transition-all duration-300 border-0 rounded-full ring-2 ring-amber-400/30 hover:ring-amber-400/50"
+            >
+              {isAuthenticated ? (
+                <>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2V7a2 2 0 012-2h2a2 2 0 002 2v2a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 00-2 2h-2a2 2 0 00-2 2v6a2 2 0 01-2 2H9z" />
+                  </svg>
+                  <span>Dashboard</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                  </svg>
+                  <span>Admin</span>
+                </>
+              )}
+            </Button>
+
+            {/* Booth CTA */}
+            <Button
+              onClick={() => navigate({ to: '/booth' })}
+              size="lg"
+              className="w-full sm:w-auto inline-flex items-center gap-2 text-base px-10 py-6 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-black font-bold shadow-2xl shadow-amber-400/40 transform hover:scale-105 transition-all duration-300 border-0 rounded-full ring-2 ring-amber-300/30 hover:ring-amber-300/50"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+              </svg>
+              <span>Booth</span>
+            </Button>
+
+            {/* Greetings CTA */}
+            <Button
+              onClick={() => navigate({ to: '/greetings' })}
+              size="lg"
+              className="w-full sm:w-auto inline-flex items-center gap-2 text-base px-10 py-6 bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-400 hover:from-amber-400 hover:to-yellow-500 text-black font-bold shadow-2xl shadow-amber-300/40 transform hover:scale-105 transition-all duration-300 border-0 rounded-full ring-2 ring-amber-200/30 hover:ring-amber-200/50"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+              </svg>
+              <span>Greetings</span>
+            </Button>
+          </div>
         </div>
       </div>
       {/* Footer note */}

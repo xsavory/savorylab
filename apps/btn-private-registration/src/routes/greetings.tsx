@@ -1,7 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
+import { createFileRoute } from '@tanstack/react-router'
 
 import useAttendanceSubscription from 'src/hooks/use-attendance-subscription'
+
 import headlineImg from 'src/assets/headline.png'
 import background2Img from 'src/assets/background2.png'
 import lightImg from 'src/assets/light.png'
@@ -88,7 +89,7 @@ function GreetingsPage() {
   }, [latestCheckIn])
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-gray-900 to-black">
+    <div className="h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-gray-900 to-black">
       {/* Background Elements */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40"
@@ -116,7 +117,7 @@ function GreetingsPage() {
       <div className="absolute top-1/2 right-32 w-24 h-24 border border-amber-500/10 rounded-full"></div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex items-center justify-center relative">
+      <div className="flex-1 flex items-center justify-center relative h-full">
         {/* Standby State */}
         {!greeting.show && (
           <div className="text-center animate-fade-in relative z-10">

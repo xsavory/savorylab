@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { QrCode, CheckCircle2, XCircle, Loader2 } from "lucide-react";
-import QrScanner from "qr-scanner";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  QRCodeScanner,
 } from "@repo/react-components/ui";
 import useCreateAttendance from "src/hooks/use-create-attendance";
 
@@ -21,71 +21,60 @@ type FeedbackState = {
 };
 
 function QRScannerModal({ open, onOpenChange }: QRScannerModalProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const scannerRef = useRef<QrScanner | null>(null);
-  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const [isScanning, setIsScanning] = useState(false);
   const [feedback, setFeedback] = useState<FeedbackState>({
     type: null,
     message: "",
   });
 
-  const { createAttendance, isPending, isSuccess, isError, error, data } =
-    useCreateAttendance();
+  const { 
+    createAttendance, 
+    isPending, 
+    isSuccess, 
+    isError, 
+    error, 
+    data 
+  } = useCreateAttendance();
 
-  // Auto-close modal after 10 seconds of idle
-  const resetIdleTimer = useCallback(() => {
-    // Clear existing timer
-    if (idleTimerRef.current) {
-      clearTimeout(idleTimerRef.current);
+  // Handler: QR Code scan
+  const handleScan = useCallback((_data: string, parsedData?: unknown) => {
+    // Type guard for parsed data
+    if (!parsedData || typeof parsedData !== 'object') {
+      console.info("⚠️ Invalid QR format - not an object");
+      return;
     }
 
-    // Set new timer
-    idleTimerRef.current = setTimeout(() => {
-      console.info("⏱️ Scanner idle timeout - closing modal");
-      onOpenChange(false);
-    }, 7000); // 10 seconds
-  }, [onOpenChange]);
+    const participantId = 'participantId' in parsedData ? parsedData.participantId : undefined;
 
-  // Clear idle timer
-  const clearIdleTimer = useCallback(() => {
-    if (idleTimerRef.current) {
-      clearTimeout(idleTimerRef.current);
-      idleTimerRef.current = null;
+    if (!participantId || typeof participantId !== 'string') {
+      console.info("⚠️ Invalid QR format - missing participantId");
+      return;
     }
+
+    // Close modal and trigger attendance creation
+    onOpenChange(false);
+    createAttendance(participantId);
+  }, [onOpenChange, createAttendance]);
+
+  // Handler: Scanner error
+  const handleScannerError = useCallback((error: string | Error) => {
+    console.error("Scanner error:", error);
+    setFeedback({
+      type: "error",
+      message: "Gagal mengakses kamera",
+    });
   }, []);
 
-  // Handle scan callback
-  const handleScan = useCallback((result: { data: string }) => {
-    const { data: qrData } = result;
-    // Reset idle timer on scan activity
-    resetIdleTimer();
+  // Handler: Scanning state change
+  const handleScanningChange = useCallback((scanning: boolean) => {
+    setIsScanning(scanning);
+  }, []);
 
-    // Parse QR data
-    try {
-      const parsedData = JSON.parse(qrData);
-      const participantId = parsedData.participantId || parsedData.id;
-
-      if (!participantId) {
-        console.info("⚠️ No participant ID in QR data");
-        return;
-      }
-
-      // Clear idle timer and stop scanner before processing
-      clearIdleTimer();
-      if (scannerRef.current) {
-        scannerRef.current.stop();
-        setIsScanning(false);
-      }
-
-      // Close modal and trigger mutation
-      onOpenChange(false);
-      createAttendance(participantId);
-    } catch (error) {
-      console.info("⚠️ Invalid QR format, Error: ", error);
-    }
-  }, [createAttendance, onOpenChange, resetIdleTimer, clearIdleTimer]);
+  // Handler: Idle timeout
+  const handleIdleTimeout = useCallback(() => {
+    console.info("⏱️ Scanner idle timeout - closing modal");
+    onOpenChange(false);
+  }, [onOpenChange]);
 
   // Handle mutation loading state
   useEffect(() => {
@@ -129,78 +118,6 @@ function QRScannerModal({ open, onOpenChange }: QRScannerModalProps) {
     }
   }, [isError, error]);
 
-  // Initialize scanner when modal opens
-  useEffect(() => {
-    if (!open) {
-      clearIdleTimer(); // Clear timer when modal closes
-      return;
-    }
-
-    let scanner: QrScanner | null = null;
-    let mounted = true;
-
-    const initScanner = async () => {
-      // Wait for video element to be ready
-      let retries = 0;
-      while (!videoRef.current && retries < 10 && mounted) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        retries++;
-      }
-
-      if (!videoRef.current || !mounted) {
-        console.info("Video element not available or component unmounted");
-        return;
-      }
-
-      try {
-        console.info("📷 Initializing QR scanner...");
-        const video = videoRef.current;
-
-        scanner = new QrScanner(
-          video,
-          handleScan,
-          {
-            returnDetailedScanResult: true,
-            preferredCamera: "environment",
-            maxScansPerSecond: 5,
-            highlightScanRegion: true,
-            highlightCodeOutline: true,
-          }
-        );
-
-        scannerRef.current = scanner;
-
-        await scanner.start();
-        console.info("✅ Scanner started successfully");
-        setIsScanning(true);
-
-        // Start idle timer when scanner is ready
-        resetIdleTimer();
-      } catch (error) {
-        console.error("❌ Scanner error:", error);
-        setFeedback({
-          type: "error",
-          message: "Gagal mengakses kamera",
-        });
-      }
-    };
-
-    initScanner();
-
-    // Cleanup
-    return () => {
-      mounted = false;
-      console.info("🔌 Cleaning up scanner...");
-      clearIdleTimer();
-      if (scanner) {
-        scanner.stop();
-        scanner.destroy();
-      }
-      scannerRef.current = null;
-      setIsScanning(false);
-    };
-  }, [open, handleScan, resetIdleTimer, clearIdleTimer]);
-
   return (
     <>
       {/* Scanner Modal */}
@@ -230,11 +147,12 @@ function QRScannerModal({ open, onOpenChange }: QRScannerModalProps) {
             <div className="space-y-4 pt-4">
               {/* QR Scanner Video */}
               <div className="relative bg-black rounded-lg overflow-hidden h-[500px]">
-                <video
-                  ref={videoRef}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  playsInline
-                  muted
+                <QRCodeScanner
+                  open={open}
+                  onScan={handleScan}
+                  onError={handleScannerError}
+                  onScanningChange={handleScanningChange}
+                  onIdleTimeout={handleIdleTimeout}
                 />
 
                 {/* Loading State */}

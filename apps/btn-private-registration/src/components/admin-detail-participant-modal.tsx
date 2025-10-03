@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useState, useCallback } from "react";
 import { User, Download } from "lucide-react";
-import QRCode from "qrcode";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   Button,
+  QRCodeGenerator,
 } from "@repo/react-components/ui";
 import type { Participant, AppwriteDocument } from "src/types/schema";
 
@@ -21,80 +21,37 @@ function AdminDetailParticipantModal({
   open,
   onOpenChange,
 }: AdminDetailParticipantModalProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [qrGenerated, setQrGenerated] = useState(false);
+  const [downloadQR, setDownloadQR] = useState<((options: { fileName: string }) => void) | null>(null);
 
-  // Generate QR code when modal opens
-  useEffect(() => {
-    if (!open) {
-      setQrGenerated(false);
-      return;
+  const participantQRData = {
+    participantId: participant.$id,
+    name: participant.name,
+  }
+
+  // Handler: QR code generated
+  const handleQRGenerated = useCallback((success: boolean) => {
+    setQrGenerated(success);
+    if (success) {
+      console.log("QR code generated successfully");
+    } else {
+      console.error("Failed to generate QR code");
     }
+  }, []);
 
-    const generateQR = async () => {
-      // Wait for canvas to be mounted
-      let retries = 0;
-      while (!canvasRef.current && retries < 10) {
-        await new Promise((resolve) => setTimeout(resolve, 50));
-        retries++;
-      }
+  // Handler: QR code ready (expose download method)
+  const handleQRReady = useCallback((methods: { download: (options: { fileName: string }) => void }) => {
+    setDownloadQR(() => methods.download);
+  }, []);
 
-      if (!canvasRef.current) {
-        console.error("Canvas element not available after retries");
-        return;
-      }
+  // Handler: Download QR code
+  const handleDownloadClick = useCallback(() => {
+    if (!downloadQR) return;
 
-      try {
-        const qrPayload = JSON.stringify({
-          participantId: participant.$id,
-          name: participant.name,
-        });
-
-        console.log("Generating QR with payload:", qrPayload);
-
-        await QRCode.toCanvas(canvasRef.current, qrPayload, {
-          width: 256,
-          margin: 2,
-          color: {
-            dark: "#000000",
-            light: "#ffffff",
-          },
-          errorCorrectionLevel: "M",
-        });
-
-        console.log("QR code generated successfully");
-        setQrGenerated(true);
-      } catch (error) {
-        console.error("Failed to generate QR code:", error);
-        setQrGenerated(false);
-      }
-    };
-
-    generateQR();
-  }, [open, participant.$id, participant.name]);
-
-  // Handle QR code download
-  const handleDownloadQR = () => {
-    if (!canvasRef.current) return;
-
-    canvasRef.current.toBlob((blob) => {
-      if (!blob) return;
-
-      // Sanitize filename - replace special chars with underscore
-      const sanitizedName = participant.name.replace(/[^a-zA-Z0-9]/g, "_");
-      const filename = `${sanitizedName}.png`;
-
-      // Create download link
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = filename;
-      link.click();
-
-      // Cleanup
-      URL.revokeObjectURL(url);
-    });
-  };
+    // Sanitize filename - replace special chars with underscore
+    const sanitizedName = participant.name.replace(/[^a-zA-Z0-9]/g, "_");
+    downloadQR({ fileName: sanitizedName });
+  }, [downloadQR, participant.name]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -158,18 +115,18 @@ function AdminDetailParticipantModal({
             <p className="text-sm text-gray-400">QR Code</p>
 
             {/* QR Canvas Preview */}
-            <div className="flex justify-center p-4 bg-white rounded-lg">
-              <canvas
-                ref={canvasRef}
-                className="max-w-full h-auto"
-              />
-            </div>
+            <QRCodeGenerator
+              data={participantQRData}
+              onGenerated={handleQRGenerated}
+              onReady={handleQRReady}
+              className="flex justify-center"
+            />
 
             {/* Download Button */}
             <Button
-              onClick={handleDownloadQR}
+              onClick={handleDownloadClick}
               disabled={!qrGenerated}
-              className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full mt-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Download className="mr-2 h-4 w-4" />
               Download QR Code
