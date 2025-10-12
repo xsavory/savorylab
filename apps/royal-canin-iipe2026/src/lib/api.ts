@@ -163,6 +163,43 @@ export const participants = {
   },
 
   /**
+   * Submit participant quiz result
+   */
+  submitQuizResult: async (data: {
+    participantId: string;
+    activity: Activity;
+    points: number
+  }) => {
+    try {
+      await databases.updateRow({
+        databaseId: DATABASE_ID,
+        tableId: PARTICIPANTS_TABLE_ID,
+        rowId: data.participantId,
+        data: {
+          points: data.points
+        }
+      })
+
+      const response = await databases.createRow({
+        databaseId: DATABASE_ID,
+        tableId: ACTIVITY_LOG_TABLE_ID,
+        rowId: ID.unique(),
+        data: {
+          participant: data.participantId,
+          activity: data.activity,
+        }
+      });
+
+      return formatApiResponse<AppwriteDocument<ActivityLog>>(
+        response as unknown as AppwriteDocument<ActivityLog>,
+        null
+      );
+    } catch (error) {
+      return formatApiResponse<null>(null, error);
+    }
+  },
+
+  /**
    * Register new participant
    */
   register: async (participant: {
@@ -234,7 +271,20 @@ export const activityLog = {
   },
 
   getByParticipant: async (participantId: string) => {
-    // TODO
+    try {
+      const response = await databases.listRows({
+        databaseId: DATABASE_ID,
+        tableId: ACTIVITY_LOG_TABLE_ID,
+        queries: [Query.equal("participant", participantId)]
+      });
+
+      return formatApiResponse<AppwriteDocument<ActivityLog>>(
+        response as unknown as AppwriteDocument<ActivityLog>,
+        null
+      );
+    } catch (error) {
+      return formatApiResponse<null>(null, error);
+    }
   },
 
   /**

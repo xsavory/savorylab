@@ -5,6 +5,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselAutoplay } from '@repo
 
 import useParticipantAuth from 'src/hooks/use-participant-auth'
 import { ParticipantMenuGrid, ParticipantMenuDrawer } from 'src/components/participant-menu'
+
 import Banner1 from 'src/assets/banner-1.webp'
 import Banner2 from 'src/assets/banner-2.webp'
 import Banner3 from 'src/assets/banner-1.webp'
@@ -12,6 +13,12 @@ import Banner3 from 'src/assets/banner-1.webp'
 export const Route = createFileRoute('/_participant/participant/')({
   component: Participant,
 })
+
+const banners = [
+  { id: 1, image: Banner1, alt: 'Royal Canin Scan & Earn Promotion' },
+  { id: 2, image: Banner2, alt: 'Royal Canin Voucher & Rewards' },
+  { id: 3, image: Banner3, alt: 'Royal Canin x Samsung' },
+]
 
 // Global ref outside component to survive re-renders
 let isInitialized = false
@@ -38,12 +45,6 @@ function Participant() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const banners = [
-    { id: 1, image: Banner1, alt: 'Royal Canin Scan & Earn Promotion' },
-    { id: 2, image: Banner2, alt: 'Royal Canin Voucher & Rewards' },
-    { id: 3, image: Banner3, alt: 'Royal Canin x Samsung' },
-  ]
 
   const handleMenuOpen = (menuId: string) => {
     setActiveMenuId(menuId)

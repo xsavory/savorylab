@@ -6,12 +6,18 @@ import EventSchedule from './event-schedule'
 import VetConsultation from './vet-consultation'
 import FindPet from './find-pet'
 import ARQuiz from './ar-quiz'
+import BoothQuiz from './booth-quiz'
 
 const menus = [
   { id: 'event-schedule', title: 'Event Schedule', icon: Calendar, color: 'from-orange-600 to-red-600' },
   { id: 'vet-consultation', title: 'Vet Consultation', icon: Stethoscope, color: 'from-orange-600 to-red-600' },
   { id: 'find-pet', title: 'Find The Right Pet', icon: Search, color: 'from-orange-600 to-red-600' },
   { id: 'ar-quiz', title: 'AR Quiz', icon: Gamepad2, color: 'from-orange-600 to-red-600' },
+]
+
+const boothQuizMenus = [
+  { id: 'vet-edu-quiz', title: 'Vet Edu Quiz' },
+  { id: 'sustainability-quiz', title: 'Sustainability Quiz' },
 ]
 
 interface ParticipantMenuGridProps {
@@ -69,7 +75,8 @@ interface ParticipantMenuDrawerProps {
 }
 
 export function ParticipantMenuDrawer({ isOpen, activeMenuId, onClose }: ParticipantMenuDrawerProps) {
-  const activeMenu = menus.find(m => m.id === activeMenuId)
+  const menusWithBoothQuiz = [...menus, ...boothQuizMenus]
+  const activeMenu = menusWithBoothQuiz.find(m => m.id === activeMenuId)
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -103,6 +110,14 @@ export function ParticipantMenuDrawer({ isOpen, activeMenuId, onClose }: Partici
 
           {activeMenuId === 'ar-quiz' && (
             <ARQuiz />
+          )}
+
+          {activeMenuId === 'vet-edu-quiz'&& (
+            <BoothQuiz menuId={'vet-edu-quiz'} />
+          )}
+
+          {activeMenuId === 'sustainability-quiz' && (
+            <BoothQuiz menuId={'sustainability-quiz'} />
           )}
         </div>
       </DrawerContent>

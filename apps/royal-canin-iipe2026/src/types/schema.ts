@@ -27,8 +27,10 @@ export interface Participant {
 }
 
 export enum Activity {
-  FindPet = "find_pet",
-  Quiz = "quiz"
+  FindPet = "find-pet",
+  ARQuiz = "ar-quiz",
+  VetEduQuiz = "vet-edu-quiz",
+  SustainabilityQuiz = "sustainability-quiz"
 }
 
 export interface ActivityLog {
