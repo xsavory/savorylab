@@ -1,6 +1,7 @@
 export * from "./button";
 export * from "./card";
 export * from "./input";
+export * from './label';
 export * from "./dropdown-menu";
 export * from "./form";
 export * from "./dialog";
@@ -9,3 +10,8 @@ export * from "./popover";
 export * from "./pagination";
 export * from "./select";
 export * from "./qrcode";
+export * from "./carousel";
+export * from "./drawer";
+export * from "./sonner";
+
+export * from './bg-animated-button';

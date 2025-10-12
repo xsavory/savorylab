@@ -9,6 +9,14 @@ export type AppwriteListResponse<T> = {
   rows: AppwriteDocument<T>[];
 };
 
+export interface Admins {
+  id: string
+  name: string
+  email: string
+  createdAt: Date
+  updatedAt: Date
+}
+
 export interface Participant {
   $id: string
   name: string
