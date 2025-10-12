@@ -1,10 +1,12 @@
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { Carousel, CarouselContent, CarouselItem, CarouselAutoplay } from '@repo/react-components/ui'
 
 import useParticipantAuth from 'src/hooks/use-participant-auth'
 import { ParticipantMenuGrid, ParticipantMenuDrawer } from 'src/components/participant-menu'
+import { participants, QUERY_KEYS } from 'src/lib/api'
 
 import Banner1 from 'src/assets/banner-1.webp'
 import Banner2 from 'src/assets/banner-2.webp'
@@ -30,6 +32,18 @@ function Participant() {
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null)
+
+  // Fetch participant points from participants table
+  const { data: pointsData, isLoading: isLoadingPoints } = useQuery({
+    queryKey: QUERY_KEYS.participants,
+    queryFn: async () => {
+      if (!user?.id) return { total: 0 };
+      const response = await participants.getParticipantPoints(user.id);
+      if (response.error) throw new Error(response.error || 'Failed to get points');
+      return response.data;
+    },
+    enabled: !!user?.id
+  })
 
   // Initialize from URL only once using global flag
   useEffect(() => {
@@ -85,7 +99,7 @@ function Participant() {
                 Points
               </span>
               <span className="text-4xl font-black text-primary font-display">
-                {user?.points || 0}
+                {isLoadingPoints ? '...' : (pointsData?.total || 0)}
               </span>
             </div>
           </div>

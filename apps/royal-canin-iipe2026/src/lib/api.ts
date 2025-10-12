@@ -139,18 +139,17 @@ export const participants = {
 
   /**
    * Get participants leaderboard data
+   * Uses materialized points from participants table (instant, scalable)
    */
   getLeaderboards: async () => {
     try {
-      const queries = [
-        Query.limit(3),
-        Query.orderDesc('points')
-      ];
-
       const response = await databases.listRows({
         databaseId: DATABASE_ID,
         tableId: PARTICIPANTS_TABLE_ID,
-        queries: queries
+        queries: [
+          Query.orderDesc('points'),
+          Query.limit(3)
+        ]
       });
 
       return formatApiResponse<AppwriteListResponse<Participant>>({
@@ -163,7 +162,29 @@ export const participants = {
   },
 
   /**
+   * Get participant total points
+   * Reads from materialized points column in participants table (instant)
+   */
+  getParticipantPoints: async (participantId: string) => {
+    try {
+      const response = await databases.getRow({
+        databaseId: DATABASE_ID,
+        tableId: PARTICIPANTS_TABLE_ID,
+        rowId: participantId
+      });
+
+      const participant = response as unknown as AppwriteDocument<Participant>;
+      const totalPoints = participant.points || 0;
+
+      return formatApiResponse({ total: totalPoints }, null);
+    } catch (error) {
+      return formatApiResponse<null>(null, error);
+    }
+  },
+
+  /**
    * Submit participant quiz result
+   * Uses incremental update pattern: read current points, add new points, update
    */
   submitQuizResult: async (data: {
     participantId: string;
@@ -171,27 +192,41 @@ export const participants = {
     points: number
   }) => {
     try {
+      // 1. Read current participant data
+      const participantResponse = await databases.getRow({
+        databaseId: DATABASE_ID,
+        tableId: PARTICIPANTS_TABLE_ID,
+        rowId: data.participantId
+      });
+
+      const participant = participantResponse as unknown as AppwriteDocument<Participant>;
+      const currentPoints = participant.points || 0;
+      const newTotalPoints = currentPoints + data.points;
+
+      // 2. Update participant points (incremental)
       await databases.updateRow({
         databaseId: DATABASE_ID,
         tableId: PARTICIPANTS_TABLE_ID,
         rowId: data.participantId,
         data: {
-          points: data.points
+          points: newTotalPoints
         }
-      })
+      });
 
-      const response = await databases.createRow({
+      // 3. Create activity log entry (audit trail)
+      const activityLogResponse = await databases.createRow({
         databaseId: DATABASE_ID,
         tableId: ACTIVITY_LOG_TABLE_ID,
         rowId: ID.unique(),
         data: {
-          participant: data.participantId,
+          participants: data.participantId,
           activity: data.activity,
+          points: data.points
         }
       });
 
       return formatApiResponse<AppwriteDocument<ActivityLog>>(
-        response as unknown as AppwriteDocument<ActivityLog>,
+        activityLogResponse as unknown as AppwriteDocument<ActivityLog>,
         null
       );
     } catch (error) {
@@ -275,7 +310,7 @@ export const activityLog = {
       const response = await databases.listRows({
         databaseId: DATABASE_ID,
         tableId: ACTIVITY_LOG_TABLE_ID,
-        queries: [Query.equal("participant", participantId)]
+        queries: [Query.equal("participants", participantId)]
       });
 
       return formatApiResponse<AppwriteDocument<ActivityLog>>(
@@ -304,33 +339,6 @@ export const activityLog = {
         total: response.total,
         rows: response.rows as unknown as AppwriteDocument<ActivityLog>[]
       }, null);
-    } catch (error) {
-      return formatApiResponse<null>(null, error);
-    }
-  },
-
-  /**
-   * Create new participant activity
-   */
-  create: async (participantActivity: {
-    participantId: string;
-    activity?: Activity;
-  }) => {
-    try {
-      const response = await databases.createRow({
-        databaseId: DATABASE_ID,
-        tableId: ACTIVITY_LOG_TABLE_ID,
-        rowId: ID.unique(),
-        data: {
-          participant: participantActivity.participantId,
-          activity: participantActivity.activity
-        }
-      });
-
-      return formatApiResponse<AppwriteDocument<ActivityLog>>(
-        response as unknown as AppwriteDocument<ActivityLog>,
-        null
-      );
     } catch (error) {
       return formatApiResponse<null>(null, error);
     }

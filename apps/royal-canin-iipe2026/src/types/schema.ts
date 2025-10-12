@@ -19,6 +19,7 @@ export interface Admin {
 
 export interface Participant {
   $id: string;
+  id: string;
   name: string;
   phone: string;
   points: number;
@@ -35,8 +36,9 @@ export enum Activity {
 
 export interface ActivityLog {
   $id: string;
-  participant: Participant;
+  participants: Participant | string;
   activity: Activity;
+  points: number;
   $createdAt: Date;
   $updatedAt: Date;
 }

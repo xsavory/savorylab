@@ -1,5 +1,11 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
+
+import { activityLog, participants, QUERY_KEYS } from 'src/lib/api'
+import { Activity } from 'src/types/schema'
+import useParticipantAuth from 'src/hooks/use-participant-auth'
 
 interface BoothQuizProps {
   menuId: 'vet-edu-quiz' | 'sustainability-quiz'
@@ -126,6 +132,10 @@ const sustainabilityQuestions: Question[] = [
 ]
 
 function BoothQuiz({ menuId }: BoothQuizProps) {
+  const { user } = useParticipantAuth()
+  const participantId = user?.id || ''
+  const queryClient = useQueryClient()
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<boolean[]>([])
   const [totalPoints, setTotalPoints] = useState(0)
@@ -138,6 +148,44 @@ function BoothQuiz({ menuId }: BoothQuizProps) {
   const currentQuestion = questions[currentQuestionIndex]
   const rawProgress = (answers.length / questions.length) * 100
   const progress = Math.round(rawProgress / 10) * 10
+
+  const activity = menuId === 'vet-edu-quiz' ? Activity.VetEduQuiz : Activity.SustainabilityQuiz
+
+  // Check if participant has already played this quiz
+  const { data: activityData, isLoading: isCheckingActivity } = useQuery({
+    queryKey: ['activity', participantId, activity],
+    queryFn: async () => {
+      const response = await activityLog.getByParticipant(participantId)
+      if (response.error) throw new Error(response.error || 'Failed to get data');
+      return response.data
+    },
+    enabled: !!participantId,
+  })
+
+  // Check if activity exists for this quiz
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const hasPlayedQuiz = Array.isArray((activityData as any)?.rows)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ? (activityData as any).rows.some((log: any) => log.activity === activity)
+    : false
+
+  // Submit quiz result mutation
+  const submitMutation = useMutation({
+    mutationFn: async (points: number) => {
+      const response = await participants.submitQuizResult({
+        participantId,
+        activity,
+        points,
+      })
+      if (response.error) throw new Error(response.error || 'Submit failed');
+      return response.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.participants
+      })
+    }
+  })
 
   const handleAnswerSelect = (answer: Answer, index: number) => {
     if (isTransitioning) return
@@ -163,6 +211,7 @@ function BoothQuiz({ menuId }: BoothQuizProps) {
         setIsTransitioning(false)
       } else {
         // Quiz complete
+        const finalPoints = answer.isCorrect ? totalPoints + answer.points : totalPoints
         setIsComplete(true)
 
         // Log results
@@ -170,9 +219,12 @@ function BoothQuiz({ menuId }: BoothQuizProps) {
           quizType: menuId,
           totalQuestions: questions.length,
           correctAnswers: newAnswers.filter(Boolean).length,
-          totalPoints: answer.isCorrect ? totalPoints + answer.points : totalPoints,
+          totalPoints: finalPoints,
           timestamp: new Date().toISOString(),
         })
+
+        // Submit quiz result
+        submitMutation.mutate(finalPoints)
       }
     }, 1500)
   }
@@ -188,6 +240,41 @@ function BoothQuiz({ menuId }: BoothQuizProps) {
     console.log('==========================')
   }
 
+  // Show loading state when checking activity
+  if (isCheckingActivity) {
+    return (
+      <div className="bg-gradient-to-b from-white to-primary/5 flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-3" />
+          <p className="text-sm text-gray-600">Memuat quiz...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show message if already played
+  if (hasPlayedQuiz) {
+    return (
+      <div className="bg-gradient-to-b from-white to-primary/5 flex items-center justify-center min-h-[400px]">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-lg w-full text-center"
+        >
+          <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-lg">
+            <div className="text-5xl mb-4">🎯</div>
+            <h2 className="text-2xl font-bold text-foreground mb-3">
+              Sudah Pernah Dimainkan
+            </h2>
+            <p className="text-gray-600">
+              Anda sudah pernah memainkan quiz ini sebelumnya. Setiap participant hanya dapat memainkan quiz satu kali.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    )
+  }
+
   // Results screen
   if (isComplete) {
     const correctAnswersCount = answers.filter(Boolean).length
@@ -201,6 +288,29 @@ function BoothQuiz({ menuId }: BoothQuizProps) {
           className="max-w-lg w-full text-center"
         >
           <div className="bg-white rounded-2xl p-4 border border-gray-200 shadow-lg">
+            {submitMutation.isPending && (
+              <div className="mb-4 flex items-center justify-center gap-2 text-primary">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span className="text-sm font-medium">Menyimpan hasil...</span>
+              </div>
+            )}
+
+            {submitMutation.isError && (
+              <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3">
+                <p className="text-sm text-red-600">
+                  Gagal menyimpan hasil quiz. Silakan coba lagi.
+                </p>
+              </div>
+            )}
+
+            {submitMutation.isSuccess && (
+              <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-3">
+                <p className="text-sm text-green-600 font-medium">
+                  ✓ Hasil quiz berhasil disimpan!
+                </p>
+              </div>
+            )}
+
             <h2 className="text-2xl font-bold text-foreground mb-2">
               Quiz Selesai!
             </h2>
