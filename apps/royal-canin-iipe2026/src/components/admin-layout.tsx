@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
-import { Link } from '@tanstack/react-router'
-import { BarChart3, LogOut, Maximize, Minimize, Scan, User } from 'lucide-react'
+import { BarChart3, LogOut, Maximize, Minimize, User } from 'lucide-react'
 import { Button } from '@repo/react-components/ui'
 
 import useAdminAuth from 'src/hooks/use-admin-auth'
