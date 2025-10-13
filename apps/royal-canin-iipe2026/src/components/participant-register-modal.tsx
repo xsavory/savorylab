@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useLocation } from '@tanstack/react-router'
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Loader2 } from "lucide-react";
 import { BgAnimateButton, Input, Label } from "@repo/react-components/ui";
@@ -11,6 +11,8 @@ const closeTransition = { type: "spring" as const, bounce: 0, duration: 0.25 };
 
 const ParticipantRegisterModal = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+
   const { register } = useParticipantAuth()
 
   const [status, setStatus] = useState<string>("idle");
@@ -27,7 +29,7 @@ const ParticipantRegisterModal = () => {
       const response = await register(formData.name, formData.phone);
 
       if (response) {
-        navigate({ to: '/participant' });
+        navigate({ to: '/participant', search: location.search });
       }
     } catch (error) {
       console.error("Registration failed:", error);

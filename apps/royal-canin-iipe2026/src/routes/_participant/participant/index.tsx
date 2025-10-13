@@ -1,8 +1,10 @@
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { Carousel, CarouselContent, CarouselItem, CarouselAutoplay } from '@repo/react-components/ui'
+import { Loader2 } from 'lucide-react'
+import { Carousel, CarouselContent, CarouselItem, CarouselAutoplay, Avatar, AvatarFallback, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Button } from '@repo/react-components/ui'
+import { getInitials } from '@repo/react-components/lib'
 
 import useParticipantAuth from 'src/hooks/use-participant-auth'
 import { ParticipantMenuGrid, ParticipantMenuDrawer } from 'src/components/participant-menu'
@@ -26,12 +28,13 @@ const banners = [
 let isInitialized = false
 
 function Participant() {
-  const { user } = useParticipantAuth()
+  const { user, logout, isLoading: isAuthLoading } = useParticipantAuth()
+  const search = useSearch({ from: '/_participant/participant/' }) as { menu?: string, from?: string }
   const navigate = useNavigate()
-  const search = useSearch({ from: '/_participant/participant/' }) as { menu?: string }
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null)
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false)
 
   // Fetch participant points from participants table
   const { data: pointsData, isLoading: isLoadingPoints } = useQuery({
@@ -60,6 +63,20 @@ function Participant() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  useEffect(() => {
+    if (search.menu && search.from === 'qr' && !isInitialized) {
+      isInitialized = true
+      setActiveMenuId(search.menu)
+      setIsDrawerOpen(true)
+    }
+
+    // Cleanup on unmount
+    return () => {
+      isInitialized = false
+    }
+
+  }, [search.menu, search.from])
+
   const handleMenuOpen = (menuId: string) => {
     setActiveMenuId(menuId)
     setIsDrawerOpen(true)
@@ -70,6 +87,13 @@ function Participant() {
     setIsDrawerOpen(false)
     setActiveMenuId(null)
     navigate({ to: '.', search: {} })
+  }
+
+  const handleLogout = async () => {
+    const result = await logout();
+    if (result?.success) {
+      navigate({ to: '/' });
+    }
   }
 
   return (
@@ -84,14 +108,20 @@ function Participant() {
         <div className="bg-white rounded-xl px-4 py-2 border border-gray-200 shadow-sm">
           <div className="flex items-center justify-between">
             {/* User Info */}
-            <div>
-              <h2 className="text-lg font-bold text-foreground font-display">
-                {user?.name || 'Guest'}
-              </h2>
-              <p className="text-sm text-gray-600">
-                {user?.phone || '-'}
-              </p>
+            <div className='flex items-center gap-2'>
+              <Avatar className='w-10 h-10 cursor-pointer' onClick={() => setIsLogoutDialogOpen(true)}>
+                <AvatarFallback className='bg-primary text-white'>{getInitials(user?.name || '')}</AvatarFallback>
+              </Avatar>
+              <div>
+                <h2 className="text-lg font-bold text-foreground font-display">
+                  {user?.name || 'Guest'}
+                </h2>
+                <p className="text-sm text-gray-600">
+                  {user?.phone || '-'}
+                </p>
+              </div>
             </div>
+            
 
             {/* Points Display */}
             <div className="text-right flex gap-2 items-center">
@@ -155,6 +185,39 @@ function Participant() {
         activeMenuId={activeMenuId}
         onClose={handleMenuClose}
       />
+
+      {/* Logout Dialog */}
+      <Dialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>Logout</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-600">Apakah Anda yakin ingin keluar?</p>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsLogoutDialogOpen(false)}
+              disabled={isAuthLoading}
+            >
+              Batal
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleLogout}
+              disabled={isAuthLoading}
+            >
+              {isAuthLoading ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  Logging out...
+                </>
+              ) : (
+                'Logout'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

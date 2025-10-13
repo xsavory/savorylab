@@ -2,9 +2,9 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { Link, useLocation } from '@tanstack/react-router'
 import { Home, Trophy, History, BookOpen, Scan } from 'lucide-react'
-import { Button } from '@repo/react-components/ui'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 
+import QRScannerModal from './qr-scanner-modal'
 import RoyalCaninLogo from 'src/assets/royal-canin-logo-white.png'
 
 interface ParticipantLayoutProps {
@@ -212,39 +212,10 @@ function ParticipantLayout({
         </main>
       </div>
 
-      {/* QR Scanner Modal */}
-      <AnimatePresence>
-        {showScanner && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={() => setShowScanner(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-3xl p-6 max-w-md w-full"
-            >
-              <h3 className="text-xl font-bold text-foreground font-display mb-4">
-                QR Scanner
-              </h3>
-              <div className="aspect-square bg-gray-100 rounded-2xl flex items-center justify-center">
-                <Scan className="w-16 h-16 text-gray-400" />
-              </div>
-              <Button
-                onClick={() => setShowScanner(false)}
-                className="w-full mt-4"
-              >
-                Close
-              </Button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <QRScannerModal
+        open={showScanner}
+        onOpenChange={setShowScanner}
+      />
     </div>
   )
 }

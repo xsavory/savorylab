@@ -6,7 +6,7 @@ import PageLoader from 'src/components/page-loader'
 export const Route = createFileRoute('/_participant')({
   component: ParticipantPageLayout,
   pendingComponent: PageLoader,
-  beforeLoad: async ({ context }) => {
+  beforeLoad: async ({ context, location }) => {
     if (context.participantAuth?.user) {
       return
     }
@@ -14,7 +14,7 @@ export const Route = createFileRoute('/_participant')({
     // Only call getUser if not cached
     const user = await context.participantAuth?.getUser()
     if (!user) {
-      throw redirect({ to: '/' })
+      throw redirect({ to: '/', search: location.search })
     }
   }
 })

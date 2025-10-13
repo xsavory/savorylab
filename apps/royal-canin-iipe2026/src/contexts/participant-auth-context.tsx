@@ -12,6 +12,7 @@ export interface ParticipantAuthContextType {
   error: string | null;
   getUser: () => Promise<Participant>
   register: (name: string, phone: string) => Promise<{ success: boolean } | undefined>;
+  logout: () => Promise<{ success: boolean } | undefined>;
 }
 
 const ParticipantAuthContext = createContext<ParticipantAuthContextType | undefined>(undefined);
@@ -75,14 +76,31 @@ export const ParticipantAuthProvider = ({ children }: { children: ReactNode }) =
     }
   }, []);
 
+  const logout = useCallback(async () => {
+    setIsLoading(true);
+
+    try {
+      await sleep(500);
+      localStorage.removeItem('participant');
+      setUser(null);
+      return { success: true };
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Logout failed');
+      return { success: false };
+    } finally {
+      setIsLoading(false);
+    }
+  }, [])
+
   const contextValue: ParticipantAuthContextType = useMemo(() => ({
     user,
     isLoading,
     isError: !!error,
     error,
     getUser,
-    register
-  }), [user, isLoading, error, register, getUser]);
+    register,
+    logout
+  }), [user, isLoading, error, register, getUser, logout]);
 
   return (
     <ParticipantAuthContext.Provider value={contextValue}>
