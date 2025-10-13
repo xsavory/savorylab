@@ -131,7 +131,7 @@ const ParticipantRegisterModal = () => {
                   disabled={isLoading}
                   className="w-full h-12 text-lg flex items-center justify-center gap-2"
                 >
-                  {isLoading && <Loader2 className="size-5 animate-spin" />}
+                  {isLoading ? <Loader2 className="size-5 animate-spin" /> : 'Masuk'}
                 </BgAnimateButton>
               </form>
             </motion.div>

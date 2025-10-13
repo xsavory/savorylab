@@ -18,7 +18,8 @@ const ACTIVITY_LOG_TABLE_ID = import.meta.env.VITE_APPWRITE_ACTIVITY_LOG_TABLE_I
 // React Query keys
 export const QUERY_KEYS = {
   participants: ['participants'],
-  activityLog: ['activity', 'log']
+  activityLog: ['activity', 'log'],
+  leaderboard: ['participant', 'leaderboard'],
 };
 
 /**

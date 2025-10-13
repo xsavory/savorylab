@@ -184,6 +184,10 @@ function BoothQuiz({ menuId }: BoothQuizProps) {
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.participants
       })
+
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.leaderboard
+      })
     }
   })
 

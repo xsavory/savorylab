@@ -10,7 +10,10 @@ export const Route = createFileRoute('/_participant/participant/leaderboard')({
 
 function ParticipantLeaderboard() {
   const { data, isLoading, isError } = useQuery({
-    queryKey: QUERY_KEYS.participants,
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnMount: 'always',
+    queryKey: QUERY_KEYS.leaderboard,
     queryFn: async () => {
       const response = await participants.getLeaderboards()
       if (response.error) throw new Error(response.error || 'Failed to get data');
@@ -54,6 +57,8 @@ function ParticipantLeaderboard() {
     }
   }
 
+  console.log(isLoading, '=====')
+
   if (isLoading) {
     return (
       <div className="min-h-full bg-gradient-to-b from-white to-primary/5 flex items-center justify-center p-6">
@@ -96,7 +101,7 @@ function ParticipantLeaderboard() {
 
         {/* Leaderboard List */}
         <div className="space-y-4">
-          {leaderboardData.length === 0 ? (
+          {(leaderboardData.length === 0 && !isLoading) ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

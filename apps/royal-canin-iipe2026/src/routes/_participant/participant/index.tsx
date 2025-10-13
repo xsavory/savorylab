@@ -114,7 +114,7 @@ function Participant() {
               </Avatar>
               <div>
                 <h2 className="text-lg font-bold text-foreground font-display">
-                  {user?.name || 'Guest'}
+                  {user?.name || '-'}
                 </h2>
                 <p className="text-sm text-gray-600">
                   {user?.phone || '-'}
