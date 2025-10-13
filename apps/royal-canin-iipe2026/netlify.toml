@@ -1,2 +1,7 @@
 [build]
   ignore = "npx turbo-ignore royal-canin-iipe2026"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
