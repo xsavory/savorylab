@@ -3,14 +3,14 @@ import type { RealtimeResponseEvent } from "appwrite";
 
 import { client, account, databases } from "src/lib/appwrite";
 import { formatApiResponse } from "src/lib/utils";
-import type { 
-  AppwriteDocument, 
-  AppwriteListResponse, 
-  Participant, 
-  Activity,
+import type {
+  AppwriteDocument,
+  AppwriteListResponse,
+  Participant,
   ActivityLog,
   VetConsultation
 } from "src/types/schema";
+import { Activity } from "src/types/schema";
 
 const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const PARTICIPANTS_TABLE_ID = import.meta.env.VITE_APPWRITE_PARTICIPANTS_TABLE_ID;
@@ -185,8 +185,66 @@ export const participants = {
     }
   },
 
+  /**
+   * Get participants statistics
+   * Returns total participants and registrations per day
+   */
   getStats: async () => {
-    // TODO
+    try {
+      // Get all participants
+      const response = await databases.listRows({
+        databaseId: DATABASE_ID,
+        tableId: PARTICIPANTS_TABLE_ID,
+        queries: [Query.orderAsc('$createdAt')]
+      });
+
+      const participants = response.rows as unknown as AppwriteDocument<Participant>[];
+      const totalParticipants = response.total;
+
+      // Group registrations by day
+      const registrationsByDay: Record<string, number> = {};
+
+      participants.forEach((participant) => {
+        if (!participant.$createdAt) return;
+
+        const date = new Date(participant.$createdAt);
+        const dateKey = date.toISOString().split('T')[0] as string; // YYYY-MM-DD format
+
+        registrationsByDay[dateKey] = (registrationsByDay[dateKey] || 0) + 1;
+      });
+
+      // Get all dates and filter for event dates if they exist
+      // If no data exists, still show the 3 event dates with 0 count
+      const allDates = Object.keys(registrationsByDay);
+
+      // Event dates: 13, 14, 15 October (adjust year if needed)
+      const currentYear = allDates.length > 0 && allDates[0]
+        ? new Date(allDates[0]).getFullYear()
+        : 2025;
+
+      const eventDates = [
+        `${currentYear}-10-13`,
+        `${currentYear}-10-14`,
+        `${currentYear}-10-15`,
+      ];
+
+      // Convert to array format for charts with event dates filter
+      const dailyRegistrations = eventDates.map(date => ({
+        date,
+        count: registrationsByDay[date] || 0,
+        displayDate: new Date(date).toLocaleDateString('id-ID', {
+          day: 'numeric',
+          month: 'short'
+        })
+      }));
+
+      return formatApiResponse({
+        totalParticipants,
+        dailyRegistrations
+      }, null);
+    } catch (error) {
+      return formatApiResponse<null>(null, error);
+    }
   },
 
   /**
@@ -351,8 +409,116 @@ export const activityLog = {
     }
   },
 
-  getStats: async () => {
-    // TODO
+  /**
+   * Get activity statistics
+   * Returns activity counts, trend comparison, and hourly patterns
+   */
+  getStats: async (params?: { date?: string }) => {
+    try {
+      // Get all activity logs
+      const response = await databases.listRows({
+        databaseId: DATABASE_ID,
+        tableId: ACTIVITY_LOG_TABLE_ID,
+        queries: [Query.orderAsc('$createdAt')]
+      });
+
+      const logs = response.rows as unknown as AppwriteDocument<ActivityLog>[];
+
+      // Filter for vet-edu-quiz and sustainability-quiz only
+      const targetActivities = [Activity.VetEduQuiz, Activity.SustainabilityQuiz];
+      const filteredLogs = logs.filter(log => targetActivities.includes(log.activity));
+
+      // 1. Count participants who played each activity (unique participants)
+      const vetEduParticipants = new Set(
+        filteredLogs
+          .filter(log => log.activity === Activity.VetEduQuiz)
+          .map(log => typeof log.participants === 'string' ? log.participants : log.participants.$id)
+      );
+
+      const sustainabilityParticipants = new Set(
+        filteredLogs
+          .filter(log => log.activity === Activity.SustainabilityQuiz)
+          .map(log => typeof log.participants === 'string' ? log.participants : log.participants.$id)
+      );
+
+      // 2. Activity trend comparison (daily)
+      const activityTrend: Record<string, { vetEdu: number; sustainability: number }> = {};
+
+      filteredLogs.forEach(log => {
+        if (!log.$createdAt) return;
+        const date = new Date(log.$createdAt);
+        const dateKey = date.toISOString().split('T')[0] as string;
+
+        if (!activityTrend[dateKey]) {
+          activityTrend[dateKey] = { vetEdu: 0, sustainability: 0 };
+        }
+
+        if (log.activity === Activity.VetEduQuiz) {
+          activityTrend[dateKey].vetEdu += 1;
+        } else if (log.activity === Activity.SustainabilityQuiz) {
+          activityTrend[dateKey].sustainability += 1;
+        }
+      });
+
+      // Event dates: 13, 14, 15 October (use year from data or default to 2025)
+      const allDates = Object.keys(activityTrend);
+      const currentYear = allDates.length > 0 && allDates[0]
+        ? new Date(allDates[0]).getFullYear()
+        : 2025;
+
+      const eventDates = [
+        `${currentYear}-10-13`,
+        `${currentYear}-10-14`,
+        `${currentYear}-10-15`
+      ];
+
+      // Ensure all event dates are included, even with 0 counts
+      const trendData = eventDates.map(date => ({
+        date,
+        vetEdu: activityTrend[date]?.vetEdu || 0,
+        sustainability: activityTrend[date]?.sustainability || 0,
+        displayDate: new Date(date).toLocaleDateString('id-ID', {
+          day: 'numeric',
+          month: 'short'
+        })
+      }));
+
+      // 3. Hourly pattern for specific date (or all dates if not specified)
+      const targetDate = params?.date;
+
+      const hourlyPattern = Array.from({ length: 24 }, (_, hour) => ({
+        hour,
+        displayHour: `${hour.toString().padStart(2, '0')}:00`,
+        vetEdu: 0,
+        sustainability: 0
+      }));
+
+      filteredLogs.forEach(log => {
+        if (!log.$createdAt) return;
+        const logDate = new Date(log.$createdAt);
+        const logDateKey = logDate.toISOString().split('T')[0];
+
+        // If date filter is specified, only include logs from that date
+        if (targetDate && logDateKey !== targetDate) return;
+
+        const hour = logDate.getHours();
+
+        if (log.activity === Activity.VetEduQuiz) {
+          hourlyPattern[hour]!.vetEdu += 1;
+        } else if (log.activity === Activity.SustainabilityQuiz) {
+          hourlyPattern[hour]!.sustainability += 1;
+        }
+      });
+
+      return formatApiResponse({
+        vetEduParticipantsCount: vetEduParticipants.size,
+        sustainabilityParticipantsCount: sustainabilityParticipants.size,
+        activityTrend: trendData,
+        hourlyPattern: hourlyPattern
+      }, null);
+    } catch (error) {
+      return formatApiResponse<null>(null, error);
+    }
   },
 }
 
