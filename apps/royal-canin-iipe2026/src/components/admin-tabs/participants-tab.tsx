@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { Users, TrendingUp, Search, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
+import { useState, useEffect } from 'react'
+import { Users, TrendingUp, Search, ChevronLeft, ChevronRight, Download } from 'lucide-react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'
 import {
   ChartContainer,
@@ -14,6 +14,8 @@ import {
 import { participants } from 'src/lib/api'
 
 function ParticipantsTab() {
+  const queryClient = useQueryClient();
+
   // Pagination & Search state
   const [page, setPage] = useState(1)
   const [searchName, setSearchName] = useState('')
@@ -45,10 +47,28 @@ function ParticipantsTab() {
     }
   })
 
+  useEffect(() => {
+    const unsubscribe = participants.subscribe((payload) => {
+      if (payload.events.includes('databases.*.tables.*.rows.*.create')) {
+        queryClient.invalidateQueries({ queryKey: ['participants', 'stats'] });
+        queryClient.invalidateQueries({ queryKey: ['participants', 'list', page, searchName, searchPhone] });
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [queryClient, page, searchName, searchPhone]);
+
   const totalPages = participantsData?.total ? Math.ceil(participantsData.total / limit) : 0
 
   const handleSearch = () => {
     setPage(1) // Reset to first page when searching
+  }
+
+  const handleExport = async () => {
+    // TODO: Implement export functionality
+    console.log('Export data')
   }
 
   const chartConfig = {
@@ -163,13 +183,14 @@ function ParticipantsTab() {
                   View and manage all registered participants
                 </p>
               </div>
-              <button className="px-3 md:px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs md:text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap flex-shrink-0">
-                <svg className="w-3.5 md:w-4 h-3.5 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <span className="hidden sm:inline">Export Data</span>
-                <span className="sm:hidden">Export</span>
-              </button>
+              <Button
+                onClick={handleExport}
+                size="sm"
+                className="w-full sm:w-auto"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Export Data
+              </Button>
             </div>
 
             {/* Search Filters */}

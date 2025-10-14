@@ -325,6 +325,15 @@ export const participants = {
       return formatApiResponse<null>(null, error);
     }
   },
+
+
+  /**
+   * Subscribe to participant data changes
+   */
+  subscribe: (callback: (payload: RealtimeResponseEvent<AppwriteDocument<Participant>>) => void) => {
+    const channel = `databases.${DATABASE_ID}.tables.${PARTICIPANTS_TABLE_ID}.rows`;
+    return client.subscribe(channel, callback);
+  },
 }
 
 export const activityLog = {
@@ -520,6 +529,14 @@ export const activityLog = {
       return formatApiResponse<null>(null, error);
     }
   },
+
+  /**
+   * Subscribe to activity data changes
+   */
+  subscribe: (callback: (payload: RealtimeResponseEvent<AppwriteDocument<ActivityLog>>) => void) => {
+    const channel = `databases.${DATABASE_ID}.tables.${ACTIVITY_LOG_TABLE_ID}.rows`;
+    return client.subscribe(channel, callback);
+  },
 }
 
 export const vetConsultationSchedule = {
@@ -530,10 +547,6 @@ export const vetConsultationSchedule = {
     limit?: number;
     offset?: number;
     participantName?: string;
-    participantPhone?: string;
-    petName?: string;
-    petType?: string;
-    petBreed?: string;
   }) => {
     try {
       const limit = params?.limit || 10;
@@ -542,33 +555,14 @@ export const vetConsultationSchedule = {
       const queries = [
         Query.limit(limit),
         Query.offset(offset),
-        Query.orderDesc('$createdAt')
+        Query.orderDesc('$createdAt'),
+        Query.select(['*', 'participants.*'])
       ];
-
-      if (params?.participantName) {
-        // TODO: Add query
-      }
-
-      if (params?.participantPhone) {
-        // TODO: Add query
-      }
-
-      if (params?.petName) {
-        // TODO: Add query
-      }
-
-      if (params?.petType) {
-        // TODO: Add query
-      }
-
-      if (params?.petBreed) {
-        // TODO: Add query
-      }
 
       const response = await databases.listRows({
         databaseId: DATABASE_ID,
         tableId: VET_CONSULTATION_SHEDULE_TABLE_ID,
-        queries: queries
+        queries: queries,
       });
 
       return formatApiResponse<AppwriteListResponse<VetConsultation>>({
@@ -619,12 +613,80 @@ export const vetConsultationSchedule = {
     }
   },
 
+  /**
+   * Get vet consultation statistics
+   * Returns total consultations and counts by pet type
+   */
   getStats: async () => {
-    // TODO
+    try {
+      const response = await databases.listRows({
+        databaseId: DATABASE_ID,
+        tableId: VET_CONSULTATION_SHEDULE_TABLE_ID,
+        queries: [Query.orderAsc('$createdAt')]
+      });
+
+      const consultations = response.rows as unknown as AppwriteDocument<VetConsultation>[];
+      const totalConsultations = response.total;
+
+      // Count by pet type
+      let dogCount = 0;
+      let catCount = 0;
+
+      consultations.forEach(consultation => {
+        if (consultation.petType?.toLowerCase() === 'dog') {
+          dogCount++;
+        } else if (consultation.petType?.toLowerCase() === 'cat') {
+          catCount++;
+        }
+      });
+
+      return formatApiResponse({
+        totalConsultations,
+        dogCount,
+        catCount
+      }, null);
+    } catch (error) {
+      return formatApiResponse<null>(null, error);
+    }
   },
 
-  create: async () => {
-    // TODO
+  /**
+   * Subscribe to vet consultaion schedule data changes
+   */
+  subscribe: (callback: (payload: RealtimeResponseEvent<AppwriteDocument<VetConsultation>>) => void) => {
+    const channel = `databases.${DATABASE_ID}.tables.${VET_CONSULTATION_SHEDULE_TABLE_ID}.rows`;
+    return client.subscribe(channel, callback);
+  },
+
+  /**
+   * Create new vet consultation schedule
+   */
+  create: async (data: {
+    participantId: string;
+    petName: string;
+    petType: string;
+    petBreed: string;
+  }) => {
+    try {
+      const response = await databases.createRow({
+        databaseId: DATABASE_ID,
+        tableId: VET_CONSULTATION_SHEDULE_TABLE_ID,
+        rowId: ID.unique(),
+        data: {
+          participants: data.participantId,
+          petName: data.petName,
+          petType: data.petType,
+          petBreed: data.petBreed
+        }
+      });
+
+      return formatApiResponse<AppwriteDocument<VetConsultation>>(
+        response as unknown as AppwriteDocument<VetConsultation>,
+        null
+      );
+    } catch (error) {
+      return formatApiResponse<null>(null, error);
+    }
   },
 
   update: async () => {

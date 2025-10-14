@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Activity, TrendingUp, Clock, Users } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from 'recharts'
 import {
   ChartContainer,
@@ -13,6 +13,7 @@ import {
 import { participants, activityLog } from 'src/lib/api'
 
 function ActivityTab() {
+  const queryClient = useQueryClient();
   const [selectedDate, setSelectedDate] = useState<string>('')
 
   // Fetch leaderboard
@@ -36,6 +37,30 @@ function ActivityTab() {
       return response.data
     }
   })
+
+  useEffect(() => {
+    const unsubscribe = activityLog.subscribe((payload) => {
+      if (payload.events.includes('databases.*.tables.*.rows.*.create')) {
+        queryClient.invalidateQueries({ queryKey: ['activity', 'stats', selectedDate] });
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [queryClient, selectedDate]);
+
+  useEffect(() => {
+    const unsubscribe = participants.subscribe((payload) => {
+      if (payload.events.includes('databases.*.tables.*.rows.*.create')) {
+        queryClient.invalidateQueries({ queryKey: ['participants', 'leaderboard'] });
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [queryClient]);
 
   // Chart configs
   const trendChartConfig = {
@@ -67,7 +92,7 @@ function ActivityTab() {
   })) || []
 
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div className="space-y-3 mt-2">
       {/* Header */}
       <div className="flex items-start gap-3">
         <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">

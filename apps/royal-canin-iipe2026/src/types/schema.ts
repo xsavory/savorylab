@@ -45,7 +45,7 @@ export interface ActivityLog {
 
 export interface VetConsultation {
   $id: string;
-  participants: Participant | string;
+  participants: Participant;
   petName: string;
   petType: string;
   petBreed: string

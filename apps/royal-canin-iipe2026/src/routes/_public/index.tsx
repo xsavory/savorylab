@@ -56,7 +56,7 @@ function Index() {
       <motion.img
         src={iipeLogo}
         alt='iipe-logo'
-        className='absolute top-8 left-6 max-w-[12rem] z-10'
+        className='absolute top-8 left-6 max-w-[10rem] md:max-w-[12rem] z-10'
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 80, damping: 15, delay: 0.2 }}
@@ -72,7 +72,7 @@ function Index() {
 
       {/* Animated Top-right accent */}
       <motion.div
-        className="absolute top-[-4rem] right-[-5rem] w-[14rem] h-[14rem] md:w-[20rem] md:h-[20rem] rounded-[3rem] bg-primary"
+        className="absolute top-[-6rem] right-[-5rem] w-[12rem] h-[14rem] md:w-[20rem] md:h-[20rem] rounded-[3rem] bg-primary"
         initial={{ rotate: 25, scale: 0 }}
         animate={{ rotate: 25, scale: 1 }}
         transition={{ type: 'spring', stiffness: 80, damping: 15, delay: 0.1 }}
@@ -124,7 +124,7 @@ function Index() {
             <motion.img
               src={royalCaninLogo}
               alt="Royal Canin Logo"
-              className="w-40 md:w-52 lg:w-56"
+              className="w-32 md:w-52 lg:w-56"
               transition={{ type: 'spring', stiffness: 300 }}
             />
           </motion.div>
@@ -132,19 +132,19 @@ function Index() {
           {/* Event Headline */}
           <div className="text-center">
             <motion.h1
-              className="text-7xl font-black tracking-tight font-display text-primary drop-shadow-[0_4px_0_rgba(0,0,0,0.1)]"
+              className="text-6xl md:text-7xl font-black tracking-tight font-display text-primary drop-shadow-[0_4px_0_rgba(0,0,0,0.1)]"
               variants={headlineVariants}
             >
               {headline1}
             </motion.h1>
             <motion.h2
-              className="text-7xl font-black tracking-tight font-display text-primary drop-shadow-[0_4px_0_rgba(0,0,0,0.1)]"
+              className="text-6xl md:text-7xl font-black tracking-tight font-display text-primary drop-shadow-[0_4px_0_rgba(0,0,0,0.1)]"
               variants={headlineVariants}
             >
               {headline2}
             </motion.h2>
             <motion.p
-              className="text-xl md:text-2xl text-gray-400 italic"
+              className="text-base md:text-2xl text-gray-400 italic"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.3 }}
@@ -155,7 +155,7 @@ function Index() {
 
           {/* CTA Button */}
           <motion.div
-            className="flex flex-col items-center w-full mt-12 mb-12"
+            className="flex flex-col items-center w-full mt-4 mb-12 md:mt-12"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.3, ease: "easeOut" }}

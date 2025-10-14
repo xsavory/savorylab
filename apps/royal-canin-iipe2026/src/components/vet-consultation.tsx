@@ -17,6 +17,7 @@ import {
   SelectValue,
   toast
 } from '@repo/react-components/ui'
+import useParticipantAuth from 'src/hooks/use-participant-auth'
 
 interface Vet {
   name: string
@@ -159,6 +160,8 @@ const dogBreeds = ['Golden Retriever', 'Labrador Retriever', 'German Shepherd']
 const catBreeds = ['Persian', 'Siamese', 'Maine Coon']
 
 function VetConsultation() {
+  const { user } = useParticipantAuth()
+
   const [activeDay, setActiveDay] = useState(0)
   const [direction, setDirection] = useState(0)
   const [isFormOpen, setIsFormOpen] = useState(false)
@@ -177,19 +180,37 @@ function VetConsultation() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
     setIsLoading(true)
 
-    // Mock API call with timeout
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    try {
+      const { vetConsultationSchedule } = await import('src/lib/api')
 
-    setIsLoading(false)
-    setIsFormOpen(false)
-    toast.success('Success')
+      const response = await vetConsultationSchedule.create({
+        participantId: user?.id as string,
+        petName,
+        petType,
+        petBreed
+      })
 
-    // Reset form
-    setPetName('')
-    setPetType('')
-    setPetBreed('')
+      if (response.error) {
+        toast.error(response.error || 'Failed to register consultation')
+        setIsLoading(false)
+        return
+      }
+
+      setIsLoading(false)
+      setIsFormOpen(false)
+      toast.success('Consultation registered successfully!')
+
+      // Reset form
+      setPetName('')
+      setPetType('')
+      setPetBreed('')
+    } catch (error) {
+      setIsLoading(false)
+      toast.error(error instanceof Error ? error.message : 'An error occurred')
+    }
   }
 
   const tabs = consultationData.map((schedule, index) => ({
@@ -335,7 +356,7 @@ function VetConsultation() {
       </div>
 
       {/* CTA Button */}
-      <div className="sticky bottom-0 -mx-6 -mb-6 p-4 bg-gradient-to-t from-white via-white to-transparent">
+      <div className="sticky bottom-0 -mx-6  p-4 bg-gradient-to-t from-white via-white to-transparent z-10">
         <Button
           onClick={() => setIsFormOpen(true)}
           className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-7 rounded-xl shadow-lg text-base"
