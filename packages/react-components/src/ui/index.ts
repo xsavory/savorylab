@@ -14,5 +14,7 @@ export * from "./qrcode";
 export * from "./carousel";
 export * from "./drawer";
 export * from "./sonner";
+export * from "./tabs";
+export * from "./chart";
 
 export * from './bg-animated-button';

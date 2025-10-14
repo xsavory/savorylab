@@ -17,8 +17,8 @@ export interface AdminAuthContextType {
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
 
 export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<Admin | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<Admin | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const getUser = async () => {

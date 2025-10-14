@@ -42,3 +42,13 @@ export interface ActivityLog {
   $createdAt: Date;
   $updatedAt: Date;
 }
+
+export interface VetConsultation {
+  $id: string;
+  participants: Participant | string;
+  petName: string;
+  petType: string;
+  petBreed: string
+  $createdAt: Date;
+  $updatedAt: Date;
+}

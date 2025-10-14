@@ -8,12 +8,14 @@ import type {
   AppwriteListResponse, 
   Participant, 
   Activity,
-  ActivityLog 
+  ActivityLog,
+  VetConsultation
 } from "src/types/schema";
 
 const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const PARTICIPANTS_TABLE_ID = import.meta.env.VITE_APPWRITE_PARTICIPANTS_TABLE_ID;
 const ACTIVITY_LOG_TABLE_ID = import.meta.env.VITE_APPWRITE_ACTIVITY_LOG_TABLE_ID;
+const VET_CONSULTATION_SHEDULE_TABLE_ID = import.meta.env.VITE_APPWRITE_VET_CONSULTATION_SHEDULE_TABLE_ID;
 
 // React Query keys
 export const QUERY_KEYS = {
@@ -183,6 +185,10 @@ export const participants = {
     }
   },
 
+  getStats: async () => {
+    // TODO
+  },
+
   /**
    * Submit participant quiz result
    * Uses incremental update pattern: read current points, add new points, update
@@ -264,7 +270,7 @@ export const participants = {
 }
 
 export const activityLog = {
-/**
+  /**
    * Get all participant activity data
    */
   getAll: async (params?: {
@@ -344,4 +350,122 @@ export const activityLog = {
       return formatApiResponse<null>(null, error);
     }
   },
+
+  getStats: async () => {
+    // TODO
+  },
+}
+
+export const vetConsultationSchedule = {
+  /**
+   * Get all consultation schedule data
+   */
+  getAll: async (params?: {
+    limit?: number;
+    offset?: number;
+    participantName?: string;
+    participantPhone?: string;
+    petName?: string;
+    petType?: string;
+    petBreed?: string;
+  }) => {
+    try {
+      const limit = params?.limit || 10;
+      const offset = params?.offset || 0;
+
+      const queries = [
+        Query.limit(limit),
+        Query.offset(offset),
+        Query.orderDesc('$createdAt')
+      ];
+
+      if (params?.participantName) {
+        // TODO: Add query
+      }
+
+      if (params?.participantPhone) {
+        // TODO: Add query
+      }
+
+      if (params?.petName) {
+        // TODO: Add query
+      }
+
+      if (params?.petType) {
+        // TODO: Add query
+      }
+
+      if (params?.petBreed) {
+        // TODO: Add query
+      }
+
+      const response = await databases.listRows({
+        databaseId: DATABASE_ID,
+        tableId: VET_CONSULTATION_SHEDULE_TABLE_ID,
+        queries: queries
+      });
+
+      return formatApiResponse<AppwriteListResponse<VetConsultation>>({
+        total: response.total,
+        rows: response.rows as unknown as AppwriteDocument<VetConsultation>[]
+      }, null);
+    } catch (error) {
+      return formatApiResponse<null>(null, error);
+    }
+  },
+
+  getByParticipant: async (participantId: string) => {
+    try {
+      const response = await databases.listRows({
+        databaseId: DATABASE_ID,
+        tableId: VET_CONSULTATION_SHEDULE_TABLE_ID,
+        queries: [Query.equal("participants", participantId)]
+      });
+
+      return formatApiResponse<AppwriteDocument<VetConsultation>>(
+        response as unknown as AppwriteDocument<VetConsultation>,
+        null
+      );
+    } catch (error) {
+      return formatApiResponse<null>(null, error);
+    }
+  },
+
+  /**
+   * Get all consultation schedule for export (no pagination)
+   */
+  getAllForExport: async () => {
+    try {
+      const queries = [Query.orderDesc('$createdAt')];
+
+      const response = await databases.listRows({
+        databaseId: DATABASE_ID,
+        tableId: VET_CONSULTATION_SHEDULE_TABLE_ID,
+        queries: queries
+      });
+
+      return formatApiResponse<AppwriteListResponse<VetConsultation>>({
+        total: response.total,
+        rows: response.rows as unknown as AppwriteDocument<VetConsultation>[]
+      }, null);
+    } catch (error) {
+      return formatApiResponse<null>(null, error);
+    }
+  },
+
+  getStats: async () => {
+    // TODO
+  },
+
+  create: async () => {
+    // TODO
+  },
+
+  update: async () => {
+    // TODO
+  },
+
+  delete: async () => {
+    // TODO
+  }
 }
