@@ -81,9 +81,9 @@ function AdminLayout({
               <img
                 src={RoyalCaninLogo}
                 alt="Royal Canin"
-                className="h-10 w-auto"
+                className="h-8 w-auto"
               />
-              <div className="border-l border-gray-300 pl-4">
+              <div className="border-l border-gray-300 pl-4 h-8 hidden md:inline">
                 <h1 className="text-lg font-bold text-foreground font-display">Admin Dashboard</h1>
               </div>
             </div>
@@ -152,8 +152,8 @@ function AdminLayout({
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between text-sm text-gray-600">
-            <div className="text-foreground font-medium">
+          <div className="flex items-center justify-between flex-col md:flex-row text-xs text-gray-600">
+            <div className="font-medium">
               Royal Canin IIPE 2026 - Admin Dashboard
             </div>
             <div className="flex items-center gap-2">

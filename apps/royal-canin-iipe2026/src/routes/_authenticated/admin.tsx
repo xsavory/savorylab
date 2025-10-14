@@ -29,16 +29,25 @@ function AdminPage() {
     <div className="space-y-6">
       {/* Tabs Navigation */}
       <Tabs defaultValue="participants" className="w-full">
-        <TabsList className="w-full sm:w-auto">
-          <TabsTrigger value="participants" className="flex items-center gap-2">
+        <TabsList className="w-full sm:w-auto bg-gray-100 h-10">
+          <TabsTrigger
+            value="participants"
+            className="flex items-center gap-2 data-[state=active]:bg-red-600 data-[state=active]:text-white cursor-pointer"
+          >
             <Users className="w-4 h-4" />
             <span>Participants</span>
           </TabsTrigger>
-          <TabsTrigger value="activity" className="flex items-center gap-2">
+          <TabsTrigger
+            value="activity"
+            className="flex items-center gap-2 data-[state=active]:bg-red-600 data-[state=active]:text-white cursor-pointer"
+          >
             <Activity className="w-4 h-4" />
             <span>Activity</span>
           </TabsTrigger>
-          <TabsTrigger value="vet-consultation" className="flex items-center gap-2">
+          <TabsTrigger
+            value="vet-consultation"
+            className="flex items-center gap-2 data-[state=active]:bg-red-600 data-[state=active]:text-white cursor-pointer"
+          >
             <Stethoscope className="w-4 h-4" />
             <span>Vet Consultation</span>
           </TabsTrigger>
