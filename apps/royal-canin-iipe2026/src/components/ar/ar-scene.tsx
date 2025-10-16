@@ -15,7 +15,7 @@ function BicolorCat({ onModelClick, isInteractive }: ARSceneProps) {
   const groupRef = useRef<THREE.Group>(null)
 
   // Load model
-  const { scene } = useGLTF('/src/assets/3d/bicolor_cat.glb')
+  const { scene } = useGLTF('/3d/bicolor_cat.glb')
 
   useEffect(() => {
     if (scene) {
@@ -103,4 +103,4 @@ export default function ARScene({ onModelClick, isInteractive }: ARSceneProps) {
 }
 
 // Preload the cat model
-useGLTF.preload('/src/assets/3d/bicolor_cat.glb')
+useGLTF.preload('/3d/bicolor_cat.glb')
