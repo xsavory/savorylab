@@ -23,7 +23,7 @@ export const ParticipantAuthProvider = ({ children }: { children: ReactNode }) =
     return stored ? JSON.parse(stored) : null
   })
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const getUser = useCallback(async () => {

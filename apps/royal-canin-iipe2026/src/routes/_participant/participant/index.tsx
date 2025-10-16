@@ -80,6 +80,10 @@ function Participant() {
   const handleMenuOpen = (menuId: string) => {
     setActiveMenuId(menuId)
     setIsDrawerOpen(true)
+    if (menuId === 'ar-quiz') {
+      // Don't update URL for AR Quiz as it will cover the drawer
+      return navigate({ to: '/participant/ar' })
+    }
     navigate({ to: '.', search: { menu: menuId } })
   }
 

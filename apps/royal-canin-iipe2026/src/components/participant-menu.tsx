@@ -5,8 +5,8 @@ import { Calendar, Stethoscope, Search, Gamepad2, X } from 'lucide-react'
 import EventSchedule from './event-schedule'
 import VetConsultation from './vet-consultation'
 import FindPet from './find-pet'
-import ARQuiz from './ar-quiz'
 import BoothQuiz from './booth-quiz'
+import ARQuiz from './ar-quiz'
 
 const menus = [
   { id: 'event-schedule', title: 'Event Schedule', icon: Calendar, color: 'from-orange-600 to-red-600' },
