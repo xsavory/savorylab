@@ -17,9 +17,5 @@
     "noUncheckedSideEffectImports": true,
     "skipLibCheck": true,
     "incremental": false,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
   }
 }

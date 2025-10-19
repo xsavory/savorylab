@@ -117,42 +117,4 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       installDependenciesAction("Basic React Vite"),
     ],
   });
-
-  // React Vite with React Query generator
-  plop.setGenerator("react-vite-rq", {
-    description: "React Vite app with React Query",
-    prompts: [
-      {
-        type: "input",
-        name: "name",
-        message: "What is the name of the new app?",
-        validate: validateAppName,
-      },
-    ],
-    actions: [
-      createAddManyAction("react-vite-rq"),
-      modifyPackageJsonName,
-      ...modifyTsConfigActions,
-      installDependenciesAction("React Query"),
-    ],
-  });
-
-  // React Vite with Appwrite generator
-  plop.setGenerator("react-vite-appwrite", {
-    description: "React Vite app with Appwrite",
-    prompts: [
-      {
-        type: "input",
-        name: "name",
-        message: "What is the name of the new app?",
-        validate: validateAppName,
-      },
-    ],
-    actions: [
-      createAddManyAction("react-vite-appwrite"),
-      modifyPackageJsonName,
-      ...modifyTsConfigActions,
-      installDependenciesAction("Appwrite"),
-    ],
-  });
 }
